@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { items, sampleBuild } from "./data";
+import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
 
 function App() {
   const [build, setBuild] = useState<string[][]>(
@@ -9,48 +10,7 @@ function App() {
   );
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
   const [buildExportStrError, setBuildExportStrError] = useState("");
-
-  const getRawMaterials = (useritems: string[]): { [key: string]: number } => {
-    let rawMaterials: { [key: string]: number } = {};
-
-    useritems.forEach((userItem) => {
-      if (items[userItem]) {
-        // check if item is craftable (not raw material)
-        // check materials
-        Object.keys(items[userItem]).forEach((material) => {
-          if (items[material]) {
-            let compositeMaterials: string[] = [];
-            for (let i = 0; i < items[userItem][material]; i++) {
-              compositeMaterials.push(material);
-            }
-            let rawMaterialsFromComposite = getRawMaterials(compositeMaterials);
-            for (const [subMaterial, count] of Object.entries(
-              rawMaterialsFromComposite
-            )) {
-              if (!rawMaterials[subMaterial]) rawMaterials[subMaterial] = 0;
-              rawMaterials[subMaterial] += count;
-            }
-          } else {
-            // already raw material
-            if (!rawMaterials[material]) {
-              rawMaterials[material] = 0;
-            }
-            rawMaterials[material] += items[userItem][material];
-          }
-        });
-      } else {
-        // already raw material
-        if (!rawMaterials[userItem]) {
-          rawMaterials[userItem] = 0;
-        }
-        rawMaterials[userItem] += 1;
-      }
-    });
-
-    return rawMaterials;
-  };
-
-  const getCompositeMaterials = () => {};
+  const [showComposites, setShowComposites] = useState<boolean[]>([]);
 
   const addBack = () => {
     let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
@@ -109,6 +69,11 @@ function App() {
   }, [buildExportStr]);
 
   useEffect(() => {
+    let newShowComposites: boolean[] = [];
+    for (let i = 0; i < build.length; i++) {
+      newShowComposites.push(true);
+    }
+    setShowComposites(newShowComposites);
     localStorage.setItem("mistyislandbuild", JSON.stringify(build));
     setBuildExportStr(JSON.stringify(build));
   }, [build]);
@@ -197,7 +162,7 @@ function App() {
                 </select>
               </div>
               <div style={{ marginLeft: "40px" }}>
-                <h2>Back #{backNumber + 1} raw material cost:</h2>
+                <h2>Back #{backNumber + 1} raw material:</h2>
                 {Object.entries(getRawMaterials(back)).map(
                   ([rawMaterial, count], rawMaterialIndex) => {
                     return (
@@ -207,6 +172,34 @@ function App() {
                     );
                   }
                 )}
+              </div>
+              <div style={{ marginLeft: "40px" }}>
+                <h2>
+                  {showComposites[backNumber] &&
+                    `Back #${backNumber + 1} composites: `}
+                  <button
+                    onClick={() => {
+                      let newShowComposites = JSON.parse(
+                        JSON.stringify(showComposites)
+                      );
+                      newShowComposites[backNumber] =
+                        !showComposites[backNumber];
+                      setShowComposites(newShowComposites);
+                    }}
+                  >
+                    {showComposites[backNumber] ? "Hide" : "Show"}
+                  </button>
+                </h2>
+                {showComposites[backNumber] &&
+                  Object.entries(getCompositeMaterials(back)).map(
+                    ([rawMaterial, count], rawMaterialIndex) => {
+                      return (
+                        <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
+                          {count} {rawMaterial}
+                        </div>
+                      );
+                    }
+                  )}
               </div>
             </div>
           );
