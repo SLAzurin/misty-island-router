@@ -13,10 +13,16 @@ function App() {
   ): { [key: string]: number } => {
     let rawMaterials: { [key: string]: number } = {};
     structures.forEach((structure) => {
-      for (const [rawMaterial, count] of Object.entries(items[structure])) {
-        if (typeof rawMaterials[rawMaterial] === "undefined")
-          rawMaterials[rawMaterial] = 0;
-        rawMaterials[rawMaterial] += count;
+      if (items[structure]) {
+        for (const [rawMaterial, count] of Object.entries(items[structure])) {
+          if (typeof rawMaterials[rawMaterial] === "undefined")
+            rawMaterials[rawMaterial] = 0;
+          rawMaterials[rawMaterial] += count;
+        }
+      } else {
+        // Dataset not found. Must mean that the data is updated, so will reset the user's build
+        setBuild(sampleBuild);
+        window.location.reload();
       }
     });
     return rawMaterials;
