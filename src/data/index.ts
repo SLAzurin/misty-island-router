@@ -3,6 +3,10 @@ export const sampleBuild = [
     [
         "Survival Worktable",
         "Rainwater Filter",
+        "Steel Pickaxe",
+        "Iron Sword",
+    ],
+    [
         "Industrial Worktable",
         "Countertop",
         "Golden Decorative Hammer",
@@ -20,9 +24,6 @@ export const sampleBuild = [
         "Heavy Armor Battle Suit",
         "Steel Helmet",
         "Leather Bag",
-        "Health Potion 2",
+        "Life Force Recovery Potion (L)",
     ],
-    [
-        // add concrete wall x4
-    ]
 ]
