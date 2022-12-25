@@ -10,32 +10,47 @@ function App() {
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
   const [buildExportStrError, setBuildExportStrError] = useState("");
 
-  const getRawMaterials = (
-    structures: Array<string>,
-    onError?: (errormsg: string) => void
-  ): { [key: string]: number } => {
+  const getRawMaterials = (useritems: string[]): { [key: string]: number } => {
     let rawMaterials: { [key: string]: number } = {};
-    structures.forEach((structure) => {
-      if (items[structure]) {
-        for (const [rawMaterial, count] of Object.entries(items[structure])) {
-          if (typeof rawMaterials[rawMaterial] === "undefined")
-            rawMaterials[rawMaterial] = 0;
-          rawMaterials[rawMaterial] += count;
-        }
+
+    useritems.forEach((userItem) => {
+      if (items[userItem]) {
+        // check if item is craftable (not raw material)
+        // check materials
+        Object.keys(items[userItem]).forEach((material) => {
+          if (items[material]) {
+            let compositeMaterials: string[] = [];
+            for (let i = 0; i < items[userItem][material]; i++) {
+              compositeMaterials.push(material);
+            }
+            let rawMaterialsFromComposite = getRawMaterials(compositeMaterials);
+            for (const [subMaterial, count] of Object.entries(
+              rawMaterialsFromComposite
+            )) {
+              if (!rawMaterials[subMaterial]) rawMaterials[subMaterial] = 0;
+              rawMaterials[subMaterial] += count;
+            }
+          } else {
+            // already raw material
+            if (!rawMaterials[material]) {
+              rawMaterials[material] = 0;
+            }
+            rawMaterials[material] += items[userItem][material];
+          }
+        });
       } else {
-        // Dataset not found. Must mean that the data is updated, so will reset the user's build
-        if (onError) {
-          onError(`"${structure}" not found in the dataset. Please retry...`);
-          return;
-        } else {
-          // TODO: Do something different than overwriting user's old build?
-          // setBuild(sampleBuild);
-          // window.location.reload();
+        // already raw material
+        if (!rawMaterials[userItem]) {
+          rawMaterials[userItem] = 0;
         }
+        rawMaterials[userItem] += 1;
       }
     });
+
     return rawMaterials;
   };
+
+  const getCompositeMaterials = () => {};
 
   const addBack = () => {
     let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
@@ -82,9 +97,7 @@ function App() {
 
     try {
       newBuild.forEach((back) => {
-        getRawMaterials(back, (errorMsg) => {
-          throw errorMsg;
-        });
+        getRawMaterials(back);
       });
     } catch (e: any) {
       setBuildExportStrError(e.toString());
