@@ -12,9 +12,7 @@ function App() {
     structures: Array<string>
   ): { [key: string]: number } => {
     let rawMaterials: { [key: string]: number } = {};
-    console.log(structures)
     structures.forEach((structure) => {
-      console.log("onto", structure)
       for (const [rawMaterial, count] of Object.entries(items[structure])) {
         if (typeof rawMaterials[rawMaterial] === "undefined")
           rawMaterials[rawMaterial] = 0;
@@ -22,6 +20,30 @@ function App() {
       }
     });
     return rawMaterials;
+  };
+
+  const addBack = () => {
+    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
+    newBuild.push([]);
+    setBuild(newBuild);
+  };
+
+  const deleteBack = (backNummber: number) => {
+    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
+    newBuild.splice(backNummber, 1);
+    setBuild(newBuild);
+  };
+
+  const addCraftable = (backNumber: number, craftableName: string) => {
+    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
+    newBuild[backNumber].push(craftableName);
+    setBuild(newBuild);
+  };
+
+  const deleteCraftable = (backNumber: number, craftableIndex: number) => {
+    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
+    newBuild[backNumber].splice(craftableIndex, 1);
+    setBuild(newBuild);
   };
 
   useEffect(() => {
@@ -38,14 +60,24 @@ function App() {
               style={{ display: "flex", flexDirection: "row" }}
             >
               <div>
-                <h2>Back #{backNumber + 1}</h2>
+                <h2>
+                  Back #{backNumber + 1}{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      deleteBack(backNumber);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </h2>
                 {back.map((structure, structureIndex) => {
                   return (
                     <div key={structureIndex}>
                       <button
                         type="button"
                         onClick={() => {
-                          console.log("Clicked Delete", structureIndex);
+                          deleteCraftable(backNumber, structureIndex);
                         }}
                         style={{ marginRight: "10px" }}
                       >
@@ -69,22 +101,35 @@ function App() {
                     </div>
                   );
                 })}
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log("Click Add structure", backNumber + 1);
+                <label>Add craftable:</label>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value !== "")
+                      addCraftable(backNumber, e.target.value);
                   }}
+                  value={""}
                 >
-                  Add craftable item
-                </button>
+                  <option value={""}></option>
+                  {Object.keys(items)
+                    .sort()
+                    .map((itemName, itemIndex) => {
+                      return (
+                        <option
+                          key={`addcraftable${backNumber}_${itemIndex}`}
+                          value={itemName}
+                        >
+                          {itemName}
+                        </option>
+                      );
+                    })}
+                </select>
               </div>
               <div style={{ marginLeft: "40px" }}>
                 <h2>Back #{backNumber + 1} raw material cost:</h2>
                 {Object.entries(getRawMaterials(back)).map(
-                  ([rawMaterial, count]) => {
+                  ([rawMaterial, count], rawMaterialIndex) => {
                     return (
-                      <div>
+                      <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
                         {count} {rawMaterial}
                       </div>
                     );
@@ -97,7 +142,7 @@ function App() {
       </div>
       <button
         onClick={() => {
-          console.log("Add back");
+          addBack();
         }}
       >
         Add back
