@@ -29,8 +29,8 @@ function App() {
           return;
         } else {
           // TODO: Do something different than overwriting user's old build?
-          setBuild(sampleBuild);
-          window.location.reload();
+          // setBuild(sampleBuild);
+          // window.location.reload();
         }
       }
     });
