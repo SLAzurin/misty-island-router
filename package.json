@@ -1,6 +1,6 @@
 {
   "name": "misty-island-router",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -40,5 +40,6 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://slazurin.github.io/misty-island-router"
+  "homepage": "https://slazurin.github.io/misty-island-router",
+  "license": "MIT"
 }
