@@ -7,9 +7,12 @@ function App() {
       ? JSON.parse(localStorage.getItem("mistyislandbuild") as string)
       : sampleBuild
   );
+  const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
+  const [buildExportStrError, setBuildExportStrError] = useState("");
 
   const getRawMaterials = (
-    structures: Array<string>
+    structures: Array<string>,
+    onError?: (errormsg: string) => void
   ): { [key: string]: number } => {
     let rawMaterials: { [key: string]: number } = {};
     structures.forEach((structure) => {
@@ -21,8 +24,14 @@ function App() {
         }
       } else {
         // Dataset not found. Must mean that the data is updated, so will reset the user's build
-        setBuild(sampleBuild);
-        window.location.reload();
+        if (onError) {
+          onError(`"${structure}" not found in the dataset. Please retry...`);
+          return;
+        } else {
+          // TODO: Do something different than overwriting user's old build?
+          setBuild(sampleBuild);
+          window.location.reload();
+        }
       }
     });
     return rawMaterials;
@@ -63,7 +72,32 @@ function App() {
   };
 
   useEffect(() => {
+    let newBuild: string[][];
+    try {
+      newBuild = JSON.parse(buildExportStr);
+    } catch (e) {
+      setBuildExportStrError("Invalid JSON, please retry...");
+      return;
+    }
+
+    try {
+      newBuild.forEach((back) => {
+        getRawMaterials(back, (errorMsg) => {
+          throw errorMsg;
+        });
+      });
+    } catch (e: any) {
+      setBuildExportStrError(e.toString());
+      return;
+    }
+
+    setBuildExportStrError("");
+    setBuild(newBuild);
+  }, [buildExportStr]);
+
+  useEffect(() => {
     localStorage.setItem("mistyislandbuild", JSON.stringify(build));
+    setBuildExportStr(JSON.stringify(build));
   }, [build]);
 
   return (
@@ -172,6 +206,37 @@ function App() {
       >
         Add back
       </button>
+      <div style={{ marginTop: "4vh" }}>
+        Made by Azuri (aka{" "}
+        <a target="_blank" rel="noreferrer" href="https://github.com/SLAzurin">
+          SLAzurin
+        </a>
+        ,{" "}
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.reddit.com/user/Omnoloko/"
+        >
+          u/Omnoloko
+        </a>
+        )
+      </div>
+      <div style={{ marginTop: "2vh" }}>
+        <h3>Import/Export your route by copy pasting this:</h3>
+        <p>{buildExportStrError}</p>
+        <textarea
+          id="build-export-text-area"
+          style={{ width: "100%" }}
+          value={buildExportStr}
+          rows={10}
+          onChange={(e) => {
+            setBuildExportStr(e.target.value);
+          }}
+          onFocus={(e) => {
+            e.target.select();
+          }}
+        ></textarea>
+      </div>
     </div>
   );
 }
