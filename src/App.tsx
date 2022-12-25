@@ -46,6 +46,16 @@ function App() {
     setBuild(newBuild);
   };
 
+  const editCraftable = (
+    backNumber: number,
+    craftableIndex: number,
+    craftableName: string
+  ) => {
+    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
+    newBuild[backNumber][craftableIndex] = craftableName;
+    setBuild(newBuild);
+  };
+
   useEffect(() => {
     localStorage.setItem("mistyislandbuild", JSON.stringify(build));
   }, [build]);
@@ -83,7 +93,16 @@ function App() {
                       >
                         Delete
                       </button>
-                      <select defaultValue={structure}>
+                      <select
+                        value={structure}
+                        onChange={(e) => {
+                          editCraftable(
+                            backNumber,
+                            structureIndex,
+                            e.target.value
+                          );
+                        }}
+                      >
                         {Object.keys(items)
                           .sort()
                           .map((itemName, itemIndex) => {
