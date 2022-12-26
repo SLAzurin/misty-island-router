@@ -165,11 +165,15 @@ function App() {
                 <h2>Back #{backNumber + 1} raw material:</h2>
                 {Object.entries(getRawMaterials(back)).map(
                   ([rawMaterial, count], rawMaterialIndex) => {
-                    return (
-                      <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
-                        {count} {rawMaterial}
-                      </div>
-                    );
+                    if (count > 0) {
+                      return (
+                        <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
+                          {count} {rawMaterial}
+                        </div>
+                      );
+                    } else {
+                      return null;
+                    }
                   }
                 )}
               </div>
