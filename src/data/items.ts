@@ -52,7 +52,7 @@ export const items: { [key: string]: { [key: string]: number } } = {
     "Forked Spear": { Log: 2, Iron: 2, Rope: 1, },
     "Battle Hammer": { Iron: 2, Log: 2, },
     "Overload Sword MARK-L1": { "Iron Plate": 1, "Iron Rod": 1, Gold: 1, },
-    "Bow :1,	Iron": { Log: 2, Rope: 1, },
+    "Bow": { Iron: 1, Log: 2, Rope: 1, },
     "Golden Sword": { Gold: 4, Iron: 1, },
     "Fish Spear A": { Log: 1, "Iron Rod": 1, "Piranha Deadly Poison": 1, },
     "Fish Spear B": { Log: 1, "Iron Rod": 1, "Raw Fish": 1, },
