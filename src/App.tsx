@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { items, sampleBuild } from "./data";
 import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
 
@@ -6,6 +6,41 @@ interface IBuild {
   craftables: string[];
   note?: string;
 }
+
+const assetStyle: CSSProperties = {
+  height: "5vh",
+};
+const centerStyle: CSSProperties = {
+  height: "fit-content",
+  alignSelf: "center",
+};
+
+const getAsset = (materialName: string): any => {
+  let resource: any = null;
+  let filename = materialName
+    .toLowerCase()
+    .replaceAll(" ", "-")
+    .replaceAll("'", "")
+    .replaceAll("(l)", "l")
+    .replaceAll("(s)", "s");
+  if (
+    filename.endsWith("-a") ||
+    filename.endsWith("-b") ||
+    filename.endsWith("-c") ||
+    filename.endsWith("-d") ||
+    filename.endsWith("-e") ||
+    filename.endsWith("-f") ||
+    filename.endsWith("-g")
+  ) {
+    filename = filename.substring(0, filename.length - 2);
+  }
+  try {
+    resource = require(`./assets/images/${filename}.png`);
+  } catch (e: any) {
+    resource = require(`./assets/images/notfound.png`);
+  }
+  return resource;
+};
 
 const fixPreviouslyBrokenItems = (build: IBuild[]) => {
   let newBuild = [...build];
@@ -135,17 +170,29 @@ function App() {
                 </h2>
                 {back.craftables.map((structure, structureIndex) => {
                   return (
-                    <div key={structureIndex}>
+                    <div key={structureIndex} style={{ display: "flex" }}>
                       <button
                         type="button"
                         onClick={() => {
                           deleteCraftable(backNumber, structureIndex);
                         }}
-                        style={{ marginRight: "10px" }}
+                        style={{ ...centerStyle, marginRight: "10px" }}
                       >
                         Delete
                       </button>
+                      <img
+                        alt={structure}
+                        style={assetStyle}
+                        src={getAsset(structure)}
+                      />
                       <select
+                        style={centerStyle}
+                        title={
+                          "edit-craftable-" + backNumber + "-" + structureIndex
+                        }
+                        name={
+                          "edit-craftable-" + backNumber + "-" + structureIndex
+                        }
                         value={structure}
                         onChange={(e) => {
                           editCraftable(
@@ -174,6 +221,8 @@ function App() {
                 })}
                 <label>Add craftable:</label>
                 <select
+                  name={"add-craftable-" + backNumber}
+                  title={"add-craftable-" + backNumber}
                   onChange={(e) => {
                     if (e.target.value !== "")
                       addCraftable(backNumber, e.target.value);
@@ -232,8 +281,22 @@ function App() {
                   ([rawMaterial, count], rawMaterialIndex) => {
                     if (count > 0) {
                       return (
-                        <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
-                          {count} {rawMaterial}
+                        <div
+                          key={`${backNumber}_raw_${rawMaterialIndex}`}
+                          style={{
+                            display: "flex",
+                            marginTop: "0.2vh",
+                            marginBottom: "0.2vh",
+                          }}
+                        >
+                          <img
+                            alt={rawMaterial}
+                            style={assetStyle}
+                            src={getAsset(rawMaterial)}
+                          ></img>
+                          <span style={{ ...centerStyle, marginLeft: "1vw" }}>
+                            {count} {rawMaterial}
+                          </span>
                         </div>
                       );
                     } else {
@@ -261,8 +324,22 @@ function App() {
                   Object.entries(getCompositeMaterials(back.craftables)).map(
                     ([rawMaterial, count], rawMaterialIndex) => {
                       return (
-                        <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
-                          {count} {rawMaterial}
+                        <div
+                          key={`${backNumber}_raw_${rawMaterialIndex}`}
+                          style={{
+                            display: "flex",
+                            marginTop: "0.2vh",
+                            marginBottom: "0.2vh",
+                          }}
+                        >
+                          <img
+                            alt={rawMaterial}
+                            style={assetStyle}
+                            src={getAsset(rawMaterial)}
+                          />
+                          <span style={{ ...centerStyle, marginLeft: "1vw" }}>
+                            {count} {rawMaterial}
+                          </span>
                         </div>
                       );
                     }
