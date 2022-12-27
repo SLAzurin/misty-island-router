@@ -33,25 +33,25 @@ function App() {
   const [showComposites, setShowComposites] = useState<boolean[]>([]);
 
   const addBack = () => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    let newBuild = [...build];
     newBuild.push({ craftables: [] });
     setBuild(newBuild);
   };
 
   const deleteBack = (backNummber: number) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    let newBuild = [...build];
     newBuild.splice(backNummber, 1);
     setBuild(newBuild);
   };
 
   const addCraftable = (backNumber: number, craftableName: string) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    let newBuild = [...build];
     newBuild[backNumber].craftables.push(craftableName);
     setBuild(newBuild);
   };
 
   const deleteCraftable = (backNumber: number, craftableIndex: number) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    let newBuild = [...build];
     newBuild[backNumber].craftables.splice(craftableIndex, 1);
     setBuild(newBuild);
   };
@@ -61,7 +61,7 @@ function App() {
     craftableIndex: number,
     craftableName: string
   ) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    let newBuild = [...build];
     newBuild[backNumber].craftables[craftableIndex] = craftableName;
     setBuild(newBuild);
   };
@@ -182,6 +182,37 @@ function App() {
                       );
                     })}
                 </select>
+                <div>
+                  {typeof back.note !== "undefined" && (
+                    <div>
+                      <textarea
+                        rows={4}
+                        style={{ width: "100%" }}
+                        onChange={(e) => {
+                          let newBuild = [...build];
+                          newBuild[backNumber].note = e.target.value;
+                          setBuild(newBuild);
+                        }}
+                        defaultValue={back.note}
+                      />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      let newBuild = [...build];
+                      if (typeof back.note === "undefined") {
+                        newBuild[backNumber].note = "";
+                      } else {
+                        delete newBuild[backNumber].note;
+                      }
+                      setBuild(newBuild);
+                    }}
+                  >
+                    {typeof back.note !== "undefined"
+                      ? "Delete Note"
+                      : "Add Note"}
+                  </button>
+                </div>
               </div>
               <div style={{ marginLeft: "40px" }}>
                 <h2>Back #{backNumber + 1} raw material:</h2>
@@ -205,9 +236,7 @@ function App() {
                     `Back #${backNumber + 1} composites: `}
                   <button
                     onClick={() => {
-                      let newShowComposites = JSON.parse(
-                        JSON.stringify(showComposites)
-                      );
+                      let newShowComposites = [...showComposites];
                       newShowComposites[backNumber] =
                         !showComposites[backNumber];
                       setShowComposites(newShowComposites);
