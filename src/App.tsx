@@ -7,17 +7,29 @@ interface IBuild {
   note?: string;
 }
 
+const fixPreviouslyBrokenItems = (build: IBuild[]) => {
+  let newBuild = [...build];
+  for (let i = 0; i < newBuild.length; i++) {
+    for (let j = 0; j < newBuild[i].craftables.length; j++) {
+      if (newBuild[i].craftables[j] === "Bow :1,	Iron") {
+        newBuild[i].craftables[j] = "Bow";
+      }
+    }
+  }
+  return newBuild;
+};
+
 const formatIBuild = (build: IBuild[] | string[][]): IBuild[] => {
   if (build.length === 0) {
     return [];
   }
   if (!Array.isArray(build[0])) {
-    return build as IBuild[];
+    return fixPreviouslyBrokenItems(build as IBuild[]);
   }
   for (let i = 0; i < build.length; i++) {
     build[i] = { craftables: build[i] as string[] };
   }
-  return build as IBuild[];
+  return fixPreviouslyBrokenItems(build as IBuild[]);
 };
 
 function App() {
