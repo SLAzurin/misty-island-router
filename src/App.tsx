@@ -4,6 +4,7 @@ import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
 
 interface IBuild {
   craftables: string[];
+  disabledCraftables?: boolean[];
   note?: string;
 }
 
@@ -81,7 +82,7 @@ function App() {
 
   const addBack = () => {
     let newBuild = [...build];
-    newBuild.push({ craftables: [] });
+    newBuild.push({ craftables: [], disabledCraftables: [] });
     setBuild(newBuild);
   };
 
@@ -94,12 +95,18 @@ function App() {
   const addCraftable = (backNumber: number, craftableName: string) => {
     let newBuild = [...build];
     newBuild[backNumber].craftables.push(craftableName);
+    if (typeof newBuild[backNumber].disabledCraftables !== "undefined") {
+      newBuild[backNumber].disabledCraftables!.push(false);
+    }
     setBuild(newBuild);
   };
 
   const deleteCraftable = (backNumber: number, craftableIndex: number) => {
     let newBuild = [...build];
     newBuild[backNumber].craftables.splice(craftableIndex, 1);
+    if (typeof newBuild[backNumber].disabledCraftables !== "undefined") {
+      newBuild[backNumber].disabledCraftables!.splice(craftableIndex, 1);
+    }
     setBuild(newBuild);
   };
 
@@ -114,24 +121,34 @@ function App() {
   };
 
   useEffect(() => {
-    let newBuild: IBuild[] | string[][];
+    let newBuild: IBuild[];
     try {
-      newBuild = JSON.parse(buildExportStr);
+      newBuild = formatIBuild(JSON.parse(buildExportStr));
     } catch (e) {
       setBuildExportStrError("Invalid JSON, please retry...");
       return;
     }
 
-    newBuild = formatIBuild(newBuild);
-
     try {
       newBuild.forEach((back) => {
-        getRawMaterials(back.craftables);
+        getRawMaterials(back.craftables, back.disabledCraftables!);
       });
     } catch (e: any) {
       setBuildExportStrError(e.toString());
       return;
     }
+
+    newBuild.forEach((back, i) => {
+      if (
+        typeof back.disabledCraftables === "undefined" ||
+        back.disabledCraftables.length !== back.craftables.length
+      ) {
+        newBuild[i].disabledCraftables = [];
+        back.craftables.forEach(() => {
+          newBuild[i].disabledCraftables!.push(false);
+        });
+      }
+    });
 
     setBuildExportStrError("");
     setBuild(newBuild);
@@ -216,6 +233,43 @@ function App() {
                             );
                           })}
                       </select>
+                      {typeof back.disabledCraftables !== "undefined" &&
+                        structureIndex < back.disabledCraftables.length && (
+                          <div style={{ display: "flex" }}>
+                            <input
+                              id={
+                                "disable-craftable-" +
+                                backNumber +
+                                "-" +
+                                structureIndex
+                              }
+                              style={centerStyle}
+                              onChange={() => {
+                                let newBuild = [...build];
+                                newBuild[backNumber].disabledCraftables![
+                                  structureIndex
+                                ] =
+                                  !newBuild[backNumber].disabledCraftables![
+                                    structureIndex
+                                  ];
+                                setBuild(newBuild);
+                              }}
+                              type={"checkbox"}
+                              checked={back.disabledCraftables[structureIndex]}
+                            ></input>
+                            <label
+                              htmlFor={
+                                "disable-craftable-" +
+                                backNumber +
+                                "-" +
+                                structureIndex
+                              }
+                              style={centerStyle}
+                            >
+                              Disable
+                            </label>
+                          </div>
+                        )}
                     </div>
                   );
                 })}
@@ -277,33 +331,33 @@ function App() {
               </div>
               <div style={{ marginLeft: "40px" }}>
                 <h2>Back #{backNumber + 1} raw material:</h2>
-                {Object.entries(getRawMaterials(back.craftables)).map(
-                  ([rawMaterial, count], rawMaterialIndex) => {
-                    if (count > 0) {
-                      return (
-                        <div
-                          key={`${backNumber}_raw_${rawMaterialIndex}`}
-                          style={{
-                            display: "flex",
-                            marginTop: "0.2vh",
-                            marginBottom: "0.2vh",
-                          }}
-                        >
-                          <img
-                            alt={rawMaterial}
-                            style={assetStyle}
-                            src={getAsset(rawMaterial)}
-                          ></img>
-                          <span style={{ ...centerStyle, marginLeft: "1vw" }}>
-                            {count} {rawMaterial}
-                          </span>
-                        </div>
-                      );
-                    } else {
-                      return null;
-                    }
+                {Object.entries(
+                  getRawMaterials(back.craftables, back.disabledCraftables!)
+                ).map(([rawMaterial, count], rawMaterialIndex) => {
+                  if (count > 0) {
+                    return (
+                      <div
+                        key={`${backNumber}_raw_${rawMaterialIndex}`}
+                        style={{
+                          display: "flex",
+                          marginTop: "0.2vh",
+                          marginBottom: "0.2vh",
+                        }}
+                      >
+                        <img
+                          alt={rawMaterial}
+                          style={assetStyle}
+                          src={getAsset(rawMaterial)}
+                        ></img>
+                        <span style={{ ...centerStyle, marginLeft: "1vw" }}>
+                          {count} {rawMaterial}
+                        </span>
+                      </div>
+                    );
+                  } else {
+                    return null;
                   }
-                )}
+                })}
               </div>
               <div style={{ marginLeft: "40px" }}>
                 <h2>
@@ -321,29 +375,32 @@ function App() {
                   </button>
                 </h2>
                 {showComposites[backNumber] &&
-                  Object.entries(getCompositeMaterials(back.craftables)).map(
-                    ([rawMaterial, count], rawMaterialIndex) => {
-                      return (
-                        <div
-                          key={`${backNumber}_raw_${rawMaterialIndex}`}
-                          style={{
-                            display: "flex",
-                            marginTop: "0.2vh",
-                            marginBottom: "0.2vh",
-                          }}
-                        >
-                          <img
-                            alt={rawMaterial}
-                            style={assetStyle}
-                            src={getAsset(rawMaterial)}
-                          />
-                          <span style={{ ...centerStyle, marginLeft: "1vw" }}>
-                            {count} {rawMaterial}
-                          </span>
-                        </div>
-                      );
-                    }
-                  )}
+                  Object.entries(
+                    getCompositeMaterials(
+                      back.craftables,
+                      back.disabledCraftables!
+                    )
+                  ).map(([rawMaterial, count], rawMaterialIndex) => {
+                    return (
+                      <div
+                        key={`${backNumber}_raw_${rawMaterialIndex}`}
+                        style={{
+                          display: "flex",
+                          marginTop: "0.2vh",
+                          marginBottom: "0.2vh",
+                        }}
+                      >
+                        <img
+                          alt={rawMaterial}
+                          style={assetStyle}
+                          src={getAsset(rawMaterial)}
+                        />
+                        <span style={{ ...centerStyle, marginLeft: "1vw" }}>
+                          {count} {rawMaterial}
+                        </span>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           );
