@@ -2,10 +2,30 @@ import { useEffect, useState } from "react";
 import { items, sampleBuild } from "./data";
 import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
 
+interface IBuild {
+  craftables: string[];
+  note?: string;
+}
+
+const formatIBuild = (build: IBuild[] | string[][]): IBuild[] => {
+  if (build.length === 0) {
+    return [];
+  }
+  if (!Array.isArray(build[0])) {
+    return build as IBuild[];
+  }
+  for (let i = 0; i < build.length; i++) {
+    build[i] = { craftables: build[i] as string[] };
+  }
+  return build as IBuild[];
+};
+
 function App() {
-  const [build, setBuild] = useState<string[][]>(
-    localStorage.getItem("mistyislandbuild") !== null
-      ? JSON.parse(localStorage.getItem("mistyislandbuild") as string)
+  const [build, setBuild] = useState<IBuild[]>(
+    localStorage.getItem("mistyislandbuild")
+      ? formatIBuild(
+          JSON.parse(localStorage.getItem("mistyislandbuild") as string)
+        )
       : sampleBuild
   );
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
@@ -13,26 +33,26 @@ function App() {
   const [showComposites, setShowComposites] = useState<boolean[]>([]);
 
   const addBack = () => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
-    newBuild.push([]);
+    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    newBuild.push({ craftables: [] });
     setBuild(newBuild);
   };
 
   const deleteBack = (backNummber: number) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
+    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
     newBuild.splice(backNummber, 1);
     setBuild(newBuild);
   };
 
   const addCraftable = (backNumber: number, craftableName: string) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
-    newBuild[backNumber].push(craftableName);
+    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    newBuild[backNumber].craftables.push(craftableName);
     setBuild(newBuild);
   };
 
   const deleteCraftable = (backNumber: number, craftableIndex: number) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
-    newBuild[backNumber].splice(craftableIndex, 1);
+    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    newBuild[backNumber].craftables.splice(craftableIndex, 1);
     setBuild(newBuild);
   };
 
@@ -41,13 +61,13 @@ function App() {
     craftableIndex: number,
     craftableName: string
   ) => {
-    let newBuild = JSON.parse(JSON.stringify(build)) as string[][];
-    newBuild[backNumber][craftableIndex] = craftableName;
+    let newBuild = JSON.parse(JSON.stringify(build)) as IBuild[];
+    newBuild[backNumber].craftables[craftableIndex] = craftableName;
     setBuild(newBuild);
   };
 
   useEffect(() => {
-    let newBuild: string[][];
+    let newBuild: IBuild[] | string[][];
     try {
       newBuild = JSON.parse(buildExportStr);
     } catch (e) {
@@ -55,9 +75,11 @@ function App() {
       return;
     }
 
+    newBuild = formatIBuild(newBuild);
+
     try {
       newBuild.forEach((back) => {
-        getRawMaterials(back);
+        getRawMaterials(back.craftables);
       });
     } catch (e: any) {
       setBuildExportStrError(e.toString());
@@ -99,7 +121,7 @@ function App() {
                     Delete
                   </button>
                 </h2>
-                {back.map((structure, structureIndex) => {
+                {back.craftables.map((structure, structureIndex) => {
                   return (
                     <div key={structureIndex}>
                       <button
@@ -163,7 +185,7 @@ function App() {
               </div>
               <div style={{ marginLeft: "40px" }}>
                 <h2>Back #{backNumber + 1} raw material:</h2>
-                {Object.entries(getRawMaterials(back)).map(
+                {Object.entries(getRawMaterials(back.craftables)).map(
                   ([rawMaterial, count], rawMaterialIndex) => {
                     if (count > 0) {
                       return (
@@ -195,7 +217,7 @@ function App() {
                   </button>
                 </h2>
                 {showComposites[backNumber] &&
-                  Object.entries(getCompositeMaterials(back)).map(
+                  Object.entries(getCompositeMaterials(back.craftables)).map(
                     ([rawMaterial, count], rawMaterialIndex) => {
                       return (
                         <div key={`${backNumber}_raw_${rawMaterialIndex}`}>
