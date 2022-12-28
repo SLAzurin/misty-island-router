@@ -180,7 +180,8 @@ function App() {
         Please understand this website was built like an overnight castle
         without a solid foundation.
         <br />
-        Thankfully, note taking is the only problematic feature. Everything else works fine.
+        Thankfully, note taking is the only problematic feature. Everything else
+        works fine.
         <br />
         Sorry for the inconvenience, and thanks for using this tool.
       </h3>
@@ -295,6 +296,15 @@ function App() {
                               >
                                 Disable
                               </label>
+                              <button
+                                style={centerStyle}
+                                type="button"
+                                onClick={() => {
+                                  addCraftable(backNumber, structure);
+                                }}
+                              >
+                                Duplicate
+                              </button>
                             </div>
                           )}
                       </div>
