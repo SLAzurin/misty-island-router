@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/misty-island-router/static/js/main.7f83aec0.js",
+    "main.js": "/misty-island-router/static/js/main.1797a4cc.js",
     "static/media/notfound.png": "/misty-island-router/static/media/notfound.b680f18eeb26770ca435.png",
     "index.html": "/misty-island-router/index.html",
-    "main.7f83aec0.js.map": "/misty-island-router/static/js/main.7f83aec0.js.map"
+    "main.1797a4cc.js.map": "/misty-island-router/static/js/main.1797a4cc.js.map"
   },
   "entrypoints": [
-    "static/js/main.7f83aec0.js"
+    "static/js/main.1797a4cc.js"
   ]
 }
