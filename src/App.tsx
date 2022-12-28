@@ -128,6 +128,23 @@ function App() {
     setBuild(newBuild);
   };
 
+  const moveUp = (backNumber: number, craftableIndex: number) => {
+    let newBuild = [...build];
+    let temp = newBuild[backNumber].craftables[craftableIndex - 1];
+    newBuild[backNumber].craftables[craftableIndex - 1] =
+      newBuild[backNumber].craftables[craftableIndex];
+    newBuild[backNumber].craftables[craftableIndex] = temp;
+    setBuild(newBuild);
+  };
+  const moveDown = (backNumber: number, craftableIndex: number) => {
+    let newBuild = [...build];
+    let temp = newBuild[backNumber].craftables[craftableIndex + 1];
+    newBuild[backNumber].craftables[craftableIndex + 1] =
+      newBuild[backNumber].craftables[craftableIndex];
+    newBuild[backNumber].craftables[craftableIndex] = temp;
+    setBuild(newBuild);
+  };
+
   useEffect(() => {
     let newBuild: IBuild[];
     try {
@@ -219,13 +236,35 @@ function App() {
                         <div key={structureIndex} style={{ display: "flex" }}>
                           <button
                             type="button"
+                            disabled={structureIndex === 0}
+                            onClick={() => {
+                              moveUp(backNumber, structureIndex);
+                            }}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => {
                               deleteCraftable(backNumber, structureIndex);
                             }}
-                            style={{ ...centerStyle, marginRight: "10px" }}
+                            style={centerStyle}
                           >
                             Delete
                           </button>
+
+                          <button
+                            disabled={
+                              structureIndex === back.craftables.length - 1
+                            }
+                            type="button"
+                            onClick={() => {
+                              moveDown(backNumber, structureIndex);
+                            }}
+                          >
+                            ↓
+                          </button>
+
                           <img
                             alt={structure}
                             style={assetStyle}
