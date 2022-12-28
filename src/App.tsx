@@ -80,9 +80,17 @@ function App() {
   const [buildExportStrError, setBuildExportStrError] = useState("");
   const [showComposites, setShowComposites] = useState<boolean[]>([]);
 
-  const addBack = () => {
+  const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
-    newBuild.push({ craftables: [], disabledCraftables: [] });
+    if (typeof afterBackNumber !== "undefined") {
+      newBuild.splice(afterBackNumber + 1, 0, {
+        craftables: [],
+        disabledCraftables: [],
+      });
+    } else {
+      newBuild.push({ craftables: [], disabledCraftables: [] });
+    }
+    console.log(newBuild);
     setBuild(newBuild);
   };
 
@@ -189,256 +197,266 @@ function App() {
         <div>
           {build.map((back, backNumber) => {
             return (
-              <div
-                key={backNumber}
-                style={{ display: "flex", flexDirection: "row" }}
-              >
-                <div>
-                  <h2>
-                    Back #{backNumber + 1}{" "}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        deleteBack(backNumber);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </h2>
-                  {back.craftables.map((structure, structureIndex) => {
-                    return (
-                      <div key={structureIndex} style={{ display: "flex" }}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            deleteCraftable(backNumber, structureIndex);
-                          }}
-                          style={{ ...centerStyle, marginRight: "10px" }}
-                        >
-                          Delete
-                        </button>
-                        <img
-                          alt={structure}
-                          style={assetStyle}
-                          src={getAsset(structure)}
-                        />
-                        <select
-                          style={centerStyle}
-                          title={
-                            "edit-craftable-" +
-                            backNumber +
-                            "-" +
-                            structureIndex
-                          }
-                          name={
-                            "edit-craftable-" +
-                            backNumber +
-                            "-" +
-                            structureIndex
-                          }
-                          value={structure}
-                          onChange={(e) => {
-                            editCraftable(
-                              backNumber,
-                              structureIndex,
-                              e.target.value
-                            );
-                          }}
-                        >
-                          {Object.keys(items)
-                            .sort()
-                            .map((itemName, itemIndex) => {
-                              // fake indices
-                              return (
-                                <option
-                                  key={`${backNumber}_${structureIndex}_${itemIndex}`}
-                                  value={itemName}
-                                >
-                                  {itemName}
-                                </option>
-                              );
-                            })}
-                        </select>
-                        {typeof back.disabledCraftables !== "undefined" &&
-                          structureIndex < back.disabledCraftables.length && (
-                            <div style={{ display: "flex" }}>
-                              <input
-                                id={
-                                  "disable-craftable-" +
-                                  backNumber +
-                                  "-" +
-                                  structureIndex
-                                }
-                                style={centerStyle}
-                                onChange={() => {
-                                  let newBuild = [...build];
-                                  newBuild[backNumber].disabledCraftables![
-                                    structureIndex
-                                  ] =
-                                    !newBuild[backNumber].disabledCraftables![
-                                      structureIndex
-                                    ];
-                                  setBuild(newBuild);
-                                }}
-                                type={"checkbox"}
-                                checked={
-                                  back.disabledCraftables[structureIndex]
-                                }
-                              ></input>
-                              <label
-                                htmlFor={
-                                  "disable-craftable-" +
-                                  backNumber +
-                                  "-" +
-                                  structureIndex
-                                }
-                                style={centerStyle}
-                              >
-                                Disable
-                              </label>
-                              <button
-                                style={centerStyle}
-                                type="button"
-                                onClick={() => {
-                                  addCraftable(backNumber, structure);
-                                }}
-                              >
-                                Duplicate
-                              </button>
-                            </div>
-                          )}
-                      </div>
-                    );
-                  })}
-                  <label>Add craftable:</label>
-                  <select
-                    name={"add-craftable-" + backNumber}
-                    title={"add-craftable-" + backNumber}
-                    onChange={(e) => {
-                      if (e.target.value !== "")
-                        addCraftable(backNumber, e.target.value);
-                    }}
-                    value={""}
-                  >
-                    <option value={""}></option>
-                    {Object.keys(items)
-                      .sort()
-                      .map((itemName, itemIndex) => {
-                        return (
-                          <option
-                            key={`addcraftable${backNumber}_${itemIndex}`}
-                            value={itemName}
-                          >
-                            {itemName}
-                          </option>
-                        );
-                      })}
-                  </select>
+              <div>
+                <div
+                  key={backNumber}
+                  style={{ display: "flex", flexDirection: "row" }}
+                >
                   <div>
-                    {typeof back.note !== "undefined" && (
-                      <div>
-                        <textarea
-                          rows={4}
-                          style={{ width: "100%" }}
-                          onChange={(e) => {
-                            let newBuild = [...build];
-                            newBuild[backNumber].note = e.target.value;
-                            setBuild(newBuild);
-                          }}
-                          defaultValue={back.note}
-                        />
-                      </div>
-                    )}
-                    <button
-                      onClick={() => {
-                        let newBuild = [...build];
-                        if (typeof back.note === "undefined") {
-                          newBuild[backNumber].note = "";
-                        } else {
-                          delete newBuild[backNumber].note;
-                        }
-                        setBuild(newBuild);
-                      }}
-                    >
-                      {typeof back.note !== "undefined"
-                        ? "Delete Note"
-                        : "Add Note"}
-                    </button>
-                  </div>
-                </div>
-                <div style={{ marginLeft: "40px" }}>
-                  <h2>Back #{backNumber + 1} raw material:</h2>
-                  {Object.entries(
-                    getRawMaterials(back.craftables, back.disabledCraftables!)
-                  ).map(([rawMaterial, count], rawMaterialIndex) => {
-                    if (count > 0) {
+                    <h2>
+                      Back #{backNumber + 1}{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          deleteBack(backNumber);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </h2>
+                    {back.craftables.map((structure, structureIndex) => {
                       return (
-                        <div
-                          key={`${backNumber}_raw_${rawMaterialIndex}`}
-                          style={{
-                            display: "flex",
-                            marginTop: "0.2vh",
-                            marginBottom: "0.2vh",
-                          }}
-                        >
+                        <div key={structureIndex} style={{ display: "flex" }}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              deleteCraftable(backNumber, structureIndex);
+                            }}
+                            style={{ ...centerStyle, marginRight: "10px" }}
+                          >
+                            Delete
+                          </button>
                           <img
-                            alt={rawMaterial}
+                            alt={structure}
                             style={assetStyle}
-                            src={getAsset(rawMaterial)}
-                          ></img>
-                          <span style={{ ...centerStyle, marginLeft: "1vw" }}>
-                            {count} {rawMaterial}
-                          </span>
-                        </div>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
-                </div>
-                <div style={{ marginLeft: "40px" }}>
-                  <h2>
-                    {showComposites[backNumber] &&
-                      `Back #${backNumber + 1} composites: `}
-                    <button
-                      onClick={() => {
-                        let newShowComposites = [...showComposites];
-                        newShowComposites[backNumber] =
-                          !showComposites[backNumber];
-                        setShowComposites(newShowComposites);
-                      }}
-                    >
-                      {showComposites[backNumber] ? "Hide" : "Show"}
-                    </button>
-                  </h2>
-                  {showComposites[backNumber] &&
-                    Object.entries(
-                      getCompositeMaterials(
-                        back.craftables,
-                        back.disabledCraftables!
-                      )
-                    ).map(([rawMaterial, count], rawMaterialIndex) => {
-                      return (
-                        <div
-                          key={`${backNumber}_raw_${rawMaterialIndex}`}
-                          style={{
-                            display: "flex",
-                            marginTop: "0.2vh",
-                            marginBottom: "0.2vh",
-                          }}
-                        >
-                          <img
-                            alt={rawMaterial}
-                            style={assetStyle}
-                            src={getAsset(rawMaterial)}
+                            src={getAsset(structure)}
                           />
-                          <span style={{ ...centerStyle, marginLeft: "1vw" }}>
-                            {count} {rawMaterial}
-                          </span>
+                          <select
+                            style={centerStyle}
+                            title={
+                              "edit-craftable-" +
+                              backNumber +
+                              "-" +
+                              structureIndex
+                            }
+                            name={
+                              "edit-craftable-" +
+                              backNumber +
+                              "-" +
+                              structureIndex
+                            }
+                            value={structure}
+                            onChange={(e) => {
+                              editCraftable(
+                                backNumber,
+                                structureIndex,
+                                e.target.value
+                              );
+                            }}
+                          >
+                            {Object.keys(items)
+                              .sort()
+                              .map((itemName, itemIndex) => {
+                                // fake indices
+                                return (
+                                  <option
+                                    key={`${backNumber}_${structureIndex}_${itemIndex}`}
+                                    value={itemName}
+                                  >
+                                    {itemName}
+                                  </option>
+                                );
+                              })}
+                          </select>
+                          {typeof back.disabledCraftables !== "undefined" &&
+                            structureIndex < back.disabledCraftables.length && (
+                              <div style={{ display: "flex" }}>
+                                <input
+                                  id={
+                                    "disable-craftable-" +
+                                    backNumber +
+                                    "-" +
+                                    structureIndex
+                                  }
+                                  style={centerStyle}
+                                  onChange={() => {
+                                    let newBuild = [...build];
+                                    newBuild[backNumber].disabledCraftables![
+                                      structureIndex
+                                    ] =
+                                      !newBuild[backNumber].disabledCraftables![
+                                        structureIndex
+                                      ];
+                                    setBuild(newBuild);
+                                  }}
+                                  type={"checkbox"}
+                                  checked={
+                                    back.disabledCraftables[structureIndex]
+                                  }
+                                ></input>
+                                <label
+                                  htmlFor={
+                                    "disable-craftable-" +
+                                    backNumber +
+                                    "-" +
+                                    structureIndex
+                                  }
+                                  style={centerStyle}
+                                >
+                                  Disable
+                                </label>
+                                <button
+                                  style={centerStyle}
+                                  type="button"
+                                  onClick={() => {
+                                    addCraftable(backNumber, structure);
+                                  }}
+                                >
+                                  Duplicate
+                                </button>
+                              </div>
+                            )}
                         </div>
                       );
                     })}
+                    <label>Add craftable:</label>
+                    <select
+                      name={"add-craftable-" + backNumber}
+                      title={"add-craftable-" + backNumber}
+                      onChange={(e) => {
+                        if (e.target.value !== "")
+                          addCraftable(backNumber, e.target.value);
+                      }}
+                      value={""}
+                    >
+                      <option value={""}></option>
+                      {Object.keys(items)
+                        .sort()
+                        .map((itemName, itemIndex) => {
+                          return (
+                            <option
+                              key={`addcraftable${backNumber}_${itemIndex}`}
+                              value={itemName}
+                            >
+                              {itemName}
+                            </option>
+                          );
+                        })}
+                    </select>
+                    <div>
+                      {typeof back.note !== "undefined" && (
+                        <div>
+                          <textarea
+                            rows={4}
+                            style={{ width: "100%" }}
+                            onChange={(e) => {
+                              let newBuild = [...build];
+                              newBuild[backNumber].note = e.target.value;
+                              setBuild(newBuild);
+                            }}
+                            defaultValue={back.note}
+                          />
+                        </div>
+                      )}
+                      <button
+                        onClick={() => {
+                          let newBuild = [...build];
+                          if (typeof back.note === "undefined") {
+                            newBuild[backNumber].note = "";
+                          } else {
+                            delete newBuild[backNumber].note;
+                          }
+                          setBuild(newBuild);
+                        }}
+                      >
+                        {typeof back.note !== "undefined"
+                          ? "Delete Note"
+                          : "Add Note"}
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ marginLeft: "40px" }}>
+                    <h2>Back #{backNumber + 1} raw material:</h2>
+                    {Object.entries(
+                      getRawMaterials(back.craftables, back.disabledCraftables!)
+                    ).map(([rawMaterial, count], rawMaterialIndex) => {
+                      if (count > 0) {
+                        return (
+                          <div
+                            key={`${backNumber}_raw_${rawMaterialIndex}`}
+                            style={{
+                              display: "flex",
+                              marginTop: "0.2vh",
+                              marginBottom: "0.2vh",
+                            }}
+                          >
+                            <img
+                              alt={rawMaterial}
+                              style={assetStyle}
+                              src={getAsset(rawMaterial)}
+                            ></img>
+                            <span style={{ ...centerStyle, marginLeft: "1vw" }}>
+                              {count} {rawMaterial}
+                            </span>
+                          </div>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })}
+                  </div>
+                  <div style={{ marginLeft: "40px" }}>
+                    <h2>
+                      {showComposites[backNumber] &&
+                        `Back #${backNumber + 1} composites: `}
+                      <button
+                        onClick={() => {
+                          let newShowComposites = [...showComposites];
+                          newShowComposites[backNumber] =
+                            !showComposites[backNumber];
+                          setShowComposites(newShowComposites);
+                        }}
+                      >
+                        {showComposites[backNumber] ? "Hide" : "Show"}
+                      </button>
+                    </h2>
+                    {showComposites[backNumber] &&
+                      Object.entries(
+                        getCompositeMaterials(
+                          back.craftables,
+                          back.disabledCraftables!
+                        )
+                      ).map(([rawMaterial, count], rawMaterialIndex) => {
+                        return (
+                          <div
+                            key={`${backNumber}_raw_${rawMaterialIndex}`}
+                            style={{
+                              display: "flex",
+                              marginTop: "0.2vh",
+                              marginBottom: "0.2vh",
+                            }}
+                          >
+                            <img
+                              alt={rawMaterial}
+                              style={assetStyle}
+                              src={getAsset(rawMaterial)}
+                            />
+                            <span style={{ ...centerStyle, marginLeft: "1vw" }}>
+                              {count} {rawMaterial}
+                            </span>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    addBack(backNumber);
+                  }}
+                >
+                  Add back HERE
+                </button>
               </div>
             );
           })}
