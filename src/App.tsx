@@ -177,7 +177,7 @@ function App() {
         <br />
         If the app is in a spazzing state, refresh this webpage.
         <br />
-        Please understand this website was built like an overnight castle
+        Please understand this website was made like a castle built overnight
         without a solid foundation.
         <br />
         Thankfully, note taking is the only problematic feature. Everything else
