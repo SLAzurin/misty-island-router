@@ -167,7 +167,7 @@ export const items: { [key: string]: { [key: string]: number } } = {
     "Firebomb": { "Lava Solution": 1, "Lava Stone Powder": 1, },
     "Magic Wings One-time Coupon": { "Neophron Feather": 2, Cog: 2, "Lava Stone Powder": 1, },
     "Airplane One-time Coupon": { "Processed Glued Laminated Wood": 1, "Iron Plate": 2, Propeller: 1, Engine: 1, },
-    "Submarine One - time Coupon": { "Iron Plate": 3, Lever: 1, Screw: 2, Engine: 1, },
+    "Submarine One-time Coupon": { "Iron Plate": 3, Lever: 1, Screw: 2, Engine: 1, },
     "Roasted Herb": { Herb: 1, },
     "Grilled Seaweed": { Seaweed: 1, },
     "Grilled Banana": { Banana: 1, },

@@ -23,7 +23,10 @@ const getAsset = (materialName: string): any => {
     .replaceAll(" ", "-")
     .replaceAll("'", "")
     .replaceAll("(l)", "l")
-    .replaceAll("(s)", "s");
+    .replaceAll("(s)", "s")
+    .replaceAll("!", "")
+    .replaceAll("[tr:-knockback-resistance-shoes]", "")
+    .replaceAll("-one-time-coupon", "");
   if (
     filename.endsWith("-a") ||
     filename.endsWith("-b") ||
@@ -39,6 +42,7 @@ const getAsset = (materialName: string): any => {
     resource = require(`./assets/images/${filename}.png`);
   } catch (e: any) {
     resource = require(`./assets/images/notfound.png`);
+    console.log(filename);
   }
   return resource;
 };
@@ -80,6 +84,12 @@ function App() {
   const [buildExportStrError, setBuildExportStrError] = useState("");
   const [showComposites, setShowComposites] = useState<boolean[]>([]);
   const [showImportRouteTextarea, setShowImportRouteTextarea] = useState(false);
+
+  useEffect(() => {
+    Object.keys(items).forEach((v) => {
+      getAsset(v);
+    });
+  }, []);
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
