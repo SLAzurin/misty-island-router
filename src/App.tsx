@@ -232,11 +232,8 @@ function App() {
         <div>
           {build.map((back, backNumber) => {
             return (
-              <div>
-                <div
-                  key={backNumber}
-                  style={{ display: "flex", flexDirection: "row" }}
-                >
+              <div key={backNumber}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
                   <div>
                     <h2>
                       Back #{backNumber + 1}{" "}
