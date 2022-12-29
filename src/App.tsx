@@ -79,6 +79,7 @@ function App() {
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
   const [buildExportStrError, setBuildExportStrError] = useState("");
   const [showComposites, setShowComposites] = useState<boolean[]>([]);
+  const [showImportRouteTextarea, setShowImportRouteTextarea] = useState(false);
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
@@ -177,6 +178,7 @@ function App() {
 
     setBuildExportStrError("");
     setBuild(newBuild);
+    setShowImportRouteTextarea(false);
   }, [buildExportStr]);
 
   useEffect(() => {
@@ -186,27 +188,24 @@ function App() {
     }
     setShowComposites(newShowComposites);
     localStorage.setItem("mistyislandbuild", JSON.stringify(build));
-    setBuildExportStr(JSON.stringify(build));
   }, [build]);
 
   return (
-    <div>
+    <div style={{ marginBottom: "20vh" }}>
       <h1>Big warning:</h1>
       <h3>
-        <br />
-        Please write route notes on a separate notepad and copy paste it in the
-        notes field.
-        <br />
-        Writing directly into the textbox may/will result in a spazz, and will
-        break the save feature! IT MAY RESULT IN LOST DATA!
         <br />
         If the app is in a spazzing state, refresh this webpage.
         <br />
         Please understand this website was made like a castle built overnight
         without a solid foundation.
         <br />
-        Thankfully, note taking is the only problematic feature. Everything else
-        works fine.
+        I recently fixed the spazzing issue when writing notes, but it's a bit
+        laggy. Will attempt to permanantly fix note issues on a later update.
+        <br />
+        <br />
+        If there are other issues, please leave a comment on my original reddit post <a target="_blank" rel="noreferrer" href="https://www.reddit.com/r/Maplestory/comments/zuvpy0/tool_misty_island_route_planner/">here</a>.
+        <br />
         <br />
         Sorry for the inconvenience, and thanks for using this tool.
       </h3>
@@ -535,20 +534,43 @@ function App() {
           on Reddit)
         </div>
         <div style={{ marginTop: "2vh" }}>
-          <h3>Import/Export your route by copy pasting this:</h3>
+          <h3>Import/Export your route:</h3>
           <p>{buildExportStrError}</p>
-          <textarea
-            id="build-export-text-area"
-            style={{ width: "100%" }}
-            value={buildExportStr}
-            rows={10}
-            onChange={(e) => {
-              setBuildExportStr(e.target.value);
+
+          {showImportRouteTextarea && (
+            <textarea
+              id="build-export-text-area"
+              style={{ width: "100%" }}
+              rows={10}
+              onChange={(e) => {
+                setBuildExportStr(e.target.value);
+              }}
+              placeholder="Copy paste a build export here..."
+            ></textarea>
+          )}
+          <button
+            onClick={() => {
+              setShowImportRouteTextarea(!showImportRouteTextarea);
             }}
-            onFocus={(e) => {
-              e.target.select();
+          >
+            Import Route
+          </button>
+          <button
+            onClick={() => {
+              if (
+                navigator &&
+                navigator.clipboard &&
+                navigator.clipboard.writeText
+              ) {
+                navigator.clipboard.writeText(JSON.stringify(build));
+                alert("Copied build export to clipboard");
+              } else {
+                alert("FAILED to copy build export to clipboard");
+              }
             }}
-          ></textarea>
+          >
+            Export Route to clipboard
+          </button>
         </div>
       </div>
     </div>
