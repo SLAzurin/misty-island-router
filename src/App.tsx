@@ -132,17 +132,27 @@ function App() {
   const moveUp = (backNumber: number, craftableIndex: number) => {
     let newBuild = [...build];
     let temp = newBuild[backNumber].craftables[craftableIndex - 1];
+    let tempDisabled =
+      newBuild[backNumber].disabledCraftables![craftableIndex - 1];
     newBuild[backNumber].craftables[craftableIndex - 1] =
       newBuild[backNumber].craftables[craftableIndex];
     newBuild[backNumber].craftables[craftableIndex] = temp;
+    newBuild[backNumber].disabledCraftables![craftableIndex - 1] =
+      newBuild[backNumber].disabledCraftables![craftableIndex];
+    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled;
     setBuild(newBuild);
   };
   const moveDown = (backNumber: number, craftableIndex: number) => {
     let newBuild = [...build];
     let temp = newBuild[backNumber].craftables[craftableIndex + 1];
+    let tempDisabled =
+      newBuild[backNumber].disabledCraftables![craftableIndex + 1];
     newBuild[backNumber].craftables[craftableIndex + 1] =
       newBuild[backNumber].craftables[craftableIndex];
     newBuild[backNumber].craftables[craftableIndex] = temp;
+    newBuild[backNumber].disabledCraftables![craftableIndex + 1] =
+      newBuild[backNumber].disabledCraftables![craftableIndex];
+    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled;
     setBuild(newBuild);
   };
 
@@ -204,7 +214,16 @@ function App() {
         laggy. Will attempt to permanantly fix note issues on a later update.
         <br />
         <br />
-        If there are other issues, please leave a comment on my original reddit post <a target="_blank" rel="noreferrer" href="https://www.reddit.com/r/Maplestory/comments/zuvpy0/tool_misty_island_route_planner/">here</a>.
+        If there are other issues, please leave a comment on my original reddit
+        post{" "}
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.reddit.com/r/Maplestory/comments/zuvpy0/tool_misty_island_route_planner/"
+        >
+          here
+        </a>
+        .
         <br />
         <br />
         Sorry for the inconvenience, and thanks for using this tool.
