@@ -83,12 +83,12 @@ function App() {
   const [buildExportStrError, setBuildExportStrError] = useState("");
   const [showComposites, setShowComposites] = useState<boolean[]>([]);
   const [showImportRouteTextarea, setShowImportRouteTextarea] = useState(false);
-
-  useEffect(() => {
-    Object.keys(items).forEach((v) => {
-      getAsset(v);
-    });
-  }, []);
+  const [searchMode, setSearchMode] = useState<boolean[]>(
+    new Array(build.length).fill(false)
+  );
+  const [searchTerms, setSearchTerms] = useState<string[]>(
+    new Array(build.length).fill("")
+  );
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
@@ -200,11 +200,9 @@ function App() {
   }, [buildExportStr]);
 
   useEffect(() => {
-    let newShowComposites: boolean[] = [];
-    for (let i = 0; i < build.length; i++) {
-      newShowComposites.push(true);
-    }
-    setShowComposites(newShowComposites);
+    setShowComposites(new Array(build.length).fill(true));
+    setSearchMode(new Array(build.length).fill(true));
+    setSearchTerms(new Array(build.length).fill(""));
     localStorage.setItem("mistyislandbuild", JSON.stringify(build));
   }, [build]);
 
@@ -382,29 +380,79 @@ function App() {
                       );
                     })}
                     <label>Add craftable:</label>
-                    <select
-                      name={"add-craftable-" + backNumber}
-                      title={"add-craftable-" + backNumber}
-                      onChange={(e) => {
-                        if (e.target.value !== "")
-                          addCraftable(backNumber, e.target.value);
+                    {!searchMode[backNumber] && (
+                      <select
+                        name={"add-craftable-" + backNumber}
+                        title={"add-craftable-" + backNumber}
+                        onChange={(e) => {
+                          if (e.target.value !== "")
+                            addCraftable(backNumber, e.target.value);
+                        }}
+                        value={""}
+                      >
+                        <option value={""}></option>
+                        {Object.keys(items)
+                          .sort()
+                          .map((itemName, itemIndex) => {
+                            return (
+                              <option
+                                key={`addcraftable${backNumber}_${itemIndex}`}
+                                value={itemName}
+                              >
+                                {itemName}
+                              </option>
+                            );
+                          })}
+                      </select>
+                    )}
+                    {searchMode[backNumber] && (
+                      <div>
+                        <input
+                          value={searchTerms[backNumber]}
+                          onChange={(e) => {
+                            let newSearchTerm = [...searchTerms];
+                            newSearchTerm[backNumber] = e.target.value;
+                            setSearchTerms(newSearchTerm);
+                          }}
+                        ></input>
+                        <div>
+                          {searchTerms[backNumber].length !== 0 &&
+                            Object.keys(items).map((itemName) => {
+                              if (
+                                itemName
+                                  .toLowerCase()
+                                  .includes(searchTerms[backNumber])
+                              ) {
+                                return (
+                                  <button
+                                    onClick={() => {
+                                      addCraftable(backNumber, itemName);
+                                    }}
+                                  >
+                                    {itemName}
+                                  </button>
+                                );
+                              }
+                              return null;
+                            })}
+                        </div>
+                      </div>
+                    )}
+                    <input
+                      id={`searchmode-${backNumber}`}
+                      type={"checkbox"}
+                      onChange={() => {
+                        let newSearchMode = [...searchMode];
+                        newSearchMode[backNumber] = !newSearchMode[backNumber];
+                        setSearchMode(newSearchMode);
                       }}
-                      value={""}
-                    >
-                      <option value={""}></option>
-                      {Object.keys(items)
-                        .sort()
-                        .map((itemName, itemIndex) => {
-                          return (
-                            <option
-                              key={`addcraftable${backNumber}_${itemIndex}`}
-                              value={itemName}
-                            >
-                              {itemName}
-                            </option>
-                          );
-                        })}
-                    </select>
+                      checked={searchMode[backNumber]}
+                    ></input>
+                    <label htmlFor={`searchmode-${backNumber}`}>
+                      {searchMode[backNumber]
+                        ? "Uncheck for dropdown mode"
+                        : "Check for text search mode"}
+                    </label>
                     <div>
                       {typeof back.note !== "undefined" && (
                         <div>
