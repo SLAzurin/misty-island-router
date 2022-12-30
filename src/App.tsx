@@ -421,7 +421,9 @@ function App() {
                               if (
                                 itemName
                                   .toLowerCase()
-                                  .includes(searchTerms[backNumber])
+                                  .includes(
+                                    searchTerms[backNumber].toLowerCase()
+                                  )
                               ) {
                                 return (
                                   <button
