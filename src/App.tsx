@@ -16,6 +16,24 @@ const centerStyle: CSSProperties = {
   alignSelf: "center",
 };
 
+const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
+  let allRawMaterials: {
+    [key: string]: number;
+  } = {};
+  build.forEach((back, backBumber) => {
+    for (let [rawMaterial, count] of Object.entries(
+      getRawMaterials(
+        back.craftables,
+        build[backBumber].disabledCraftables as boolean[]
+      )
+    )) {
+      if (!allRawMaterials[rawMaterial]) allRawMaterials[rawMaterial] = 0;
+      allRawMaterials[rawMaterial] += count;
+    }
+  });
+  return allRawMaterials;
+};
+
 const getAsset = (materialName: string): any => {
   let resource: any = null;
   let filename = materialName
@@ -89,6 +107,7 @@ function App() {
   const [searchTerms, setSearchTerms] = useState<string[]>(
     new Array(build.length).fill("")
   );
+  const [showTotalRawMaterials, setShowTotalRawMaterials] = useState(false);
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
@@ -236,6 +255,41 @@ function App() {
       </h3>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div>
+          <div>
+            <div style={{ display: "flex" }}>
+              <h2>Total resources usage (not counting disabled ones):</h2>
+              <button
+                style={{ ...centerStyle, marginLeft: "1vw" }}
+                type="button"
+                onClick={() => {
+                  setShowTotalRawMaterials(!showTotalRawMaterials);
+                }}
+              >
+                {showTotalRawMaterials ? "Hide" : "Click here to show"}
+              </button>
+            </div>
+            {showTotalRawMaterials &&
+              Object.entries(getTotalMaterials(build)).map(
+                ([rawMaterial, count], i) => {
+                  if (count > 0)
+                    return (
+                      <div
+                        key={`build_total_material_${i}`}
+                        style={{ display: "flex" }}
+                      >
+                        <img
+                          src={getAsset(rawMaterial)}
+                          style={assetStyle}
+                        ></img>
+                        <p style={{ marginLeft: "1vw" }}>
+                          {count} {rawMaterial}
+                        </p>
+                      </div>
+                    );
+                  return null;
+                }
+              )}
+          </div>
           {build.map((back, backNumber) => {
             return (
               <div key={backNumber}>
