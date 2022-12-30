@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useState } from "react";
-import { items, sampleBuild } from "./data";
+import { items, sampleBuildMikeychainV2 } from "./data";
 import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
 
 interface IBuild {
@@ -95,7 +95,7 @@ function App() {
       ? formatIBuild(
           JSON.parse(localStorage.getItem("mistyislandbuild") as string)
         )
-      : sampleBuild
+      : sampleBuildMikeychainV2
   );
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
   const [buildExportStrError, setBuildExportStrError] = useState("");
@@ -278,6 +278,7 @@ function App() {
                         style={{ display: "flex" }}
                       >
                         <img
+                          alt={rawMaterial}
                           src={getAsset(rawMaterial)}
                           style={assetStyle}
                         ></img>
@@ -464,6 +465,7 @@ function App() {
                     {searchMode[backNumber] && (
                       <div>
                         <input
+                          placeholder="Search item name here..."
                           value={searchTerms[backNumber]}
                           onChange={(e) => {
                             let newSearchTerm = [...searchTerms];
@@ -522,7 +524,7 @@ function App() {
                               newBuild[backNumber].note = e.target.value;
                               setBuild(newBuild);
                             }}
-                            defaultValue={back.note}
+                            value={back.note}
                           />
                         </div>
                       )}
@@ -700,6 +702,13 @@ function App() {
             }}
           >
             Export Route to clipboard
+          </button>
+          <button
+            onClick={() => {
+              setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2));
+            }}
+          >
+            Import Mikeychain's Lazy 2.0 Route for Challenge Mode
           </button>
         </div>
       </div>
