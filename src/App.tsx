@@ -311,6 +311,7 @@ function App() {
                         <div key={structureIndex} style={{ display: "flex" }}>
                           <button
                             type="button"
+                            style={{ width: "3vw" }}
                             disabled={structureIndex === 0}
                             onClick={() => {
                               moveUp(backNumber, structureIndex);
@@ -333,6 +334,7 @@ function App() {
                               structureIndex === back.craftables.length - 1
                             }
                             type="button"
+                            style={{ width: "3vw" }}
                             onClick={() => {
                               moveDown(backNumber, structureIndex);
                             }}
