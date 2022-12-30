@@ -42,7 +42,6 @@ const getAsset = (materialName: string): any => {
     resource = require(`./assets/images/${filename}.png`);
   } catch (e: any) {
     resource = require(`./assets/images/notfound.png`);
-    console.log(filename);
   }
   return resource;
 };
@@ -101,7 +100,6 @@ function App() {
     } else {
       newBuild.push({ craftables: [], disabledCraftables: [] });
     }
-    console.log(newBuild);
     setBuild(newBuild);
   };
 
