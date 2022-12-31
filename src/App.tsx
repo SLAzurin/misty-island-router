@@ -244,6 +244,14 @@ function App() {
         Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
         for Challenge Mode".
         <br />
+        Video tutorial here:{" "}
+        <a
+          href="https://www.youtube.com/watch?v=MVMTjHSZIZY"
+          target={"_blank"}
+          rel={"noreferrer"}
+        >
+          https://www.youtube.com/watch?v=MVMTjHSZIZY
+        </a>
         <br />
         If there are other issues, please leave a comment on my original reddit
         post{" "}
