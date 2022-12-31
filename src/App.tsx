@@ -488,9 +488,19 @@ function App() {
                                 })}
                             </select>
                           ) : !back.disabledCraftables![structureIndex] ? (
-                            <div style={{ ...centerStyle, width: "100px" }}>{structure}</div>
+                            <div style={{ ...centerStyle, width: "100px" }}>
+                              {structure}
+                            </div>
                           ) : (
-                            <s style={{ ...centerStyle, width: "100px" }}>{structure}</s>
+                            <s
+                              style={{
+                                ...centerStyle,
+                                width: "100px",
+                                color: "red",
+                              }}
+                            >
+                              {structure}
+                            </s>
                           )}
                           {typeof back.disabledCraftables !== "undefined" &&
                             structureIndex < back.disabledCraftables.length &&
