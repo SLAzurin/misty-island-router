@@ -838,6 +838,17 @@ function App() {
           </a>{" "}
           on Reddit)
         </div>
+        <div style={{ marginTop: "4vh" }}>
+          Special thanks to{" "}
+          <a target="_blank" rel="noreferrer" href="https://github.com/ulucs">
+            ulucs
+          </a>{" "}
+          for adding the sub-composites{" "}
+          <a target="_blank" rel="noreferrer" href="https://github.com/SLAzurin/misty-island-router/pull/2">
+            feature
+          </a>
+          !
+        </div>
         <div style={{ marginTop: "2vh" }}>
           <h3>Import/Export your route:</h3>
           <p>{buildExportStrError}</p>
