@@ -232,11 +232,17 @@ function App() {
         <br />
         If the app is in a spazzing state, refresh this webpage.
         <br />
+        <br />
         Please understand this website was made like a castle built overnight
         without a solid foundation.
         <br />
-        I recently fixed the spazzing issue when writing notes, but it's a bit
-        laggy. Will attempt to permanantly fix note issues on a later update.
+        <br />
+        <span style={{ color: "red" }}>NEW! </span>
+        I recently added Mikeychain's Challenge Mode Lazy build 2.0 as a build
+        template.
+        <br />
+        Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
+        for Challenge Mode".
         <br />
         <br />
         If there are other issues, please leave a comment on my original reddit
