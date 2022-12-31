@@ -253,6 +253,7 @@ function App() {
           https://www.youtube.com/watch?v=MVMTjHSZIZY
         </a>
         <br />
+        <br />
         If there are other issues, please leave a comment on my original reddit
         post{" "}
         <a
