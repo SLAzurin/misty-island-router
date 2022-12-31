@@ -737,40 +737,54 @@ function App() {
                           back.craftables,
                           back.disabledCraftables!
                         )
-                      ).map(([rawMaterial, count], rawMaterialIndex) => {
-                        return (
-                          <div
-                            key={`${backNumber}_raw_${rawMaterialIndex}`}
-                            style={{
-                              display: "flex",
-                              marginTop: "0.2vh",
-                              marginBottom: "0.2vh",
-                            }}
-                          >
-                            <img
-                              alt={rawMaterial}
-                              style={assetStyle(assetSize)}
-                              src={getAsset(rawMaterial)}
-                            />
-                            {!minimalistMode ? (
-                              <span
-                                style={{ ...centerStyle, marginLeft: "1vw" }}
-                              >
-                                {count} {rawMaterial}
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  ...centerStyle,
-                                  marginLeft: "1vw",
-                                  fontSize: "2rem",
-                                }}
-                              >
-                                {count}
-                              </span>
-                            )}
-                          </div>
-                        );
+                      ).map(([compositeType, composites]) => {
+                        if (Object.keys(composites).length !== 0)
+                          return (
+                            <div>
+                              <h4>{compositeType}</h4>
+                              {Object.entries(composites).map(
+                                ([rawMaterial, count], rawMaterialIndex) => {
+                                  return (
+                                    <div
+                                      key={`${backNumber}_raw_${rawMaterialIndex}`}
+                                      style={{
+                                        display: "flex",
+                                        marginTop: "0.2vh",
+                                        marginBottom: "0.2vh",
+                                      }}
+                                    >
+                                      <img
+                                        alt={rawMaterial}
+                                        style={assetStyle(assetSize)}
+                                        src={getAsset(rawMaterial)}
+                                      />
+                                      {!minimalistMode ? (
+                                        <span
+                                          style={{
+                                            ...centerStyle,
+                                            marginLeft: "1vw",
+                                          }}
+                                        >
+                                          {count} {rawMaterial}
+                                        </span>
+                                      ) : (
+                                        <span
+                                          style={{
+                                            ...centerStyle,
+                                            marginLeft: "1vw",
+                                            fontSize: "2rem",
+                                          }}
+                                        >
+                                          {count}
+                                        </span>
+                                      )}
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                          );
+                        return null;
                       })}
                   </div>
                 </div>

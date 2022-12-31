@@ -114,8 +114,9 @@ export const getRawMaterials = (useritems: string[], disabledItems: boolean[]): 
 export const getCompositeMaterials = (
     useritems: string[],
     disabledItems: boolean[]
-): { [key: string]: number } => {
-    let compositeMaterials: { [key: string]: number } = {};
+): { [key: string]: { [key: string]: number } } => {
+    let composites: { [key: string]: number } = {};
+    let subComposites: { [key: string]: number } = {};
 
     useritems.forEach((userItem, i) => {
         if (!(disabledItems && i < disabledItems.length && disabledItems[i]))
@@ -124,27 +125,27 @@ export const getCompositeMaterials = (
                 Object.keys(items[userItem]).forEach((material) => {
                     if (items[material]) {
                         // is composite
-                        if (!compositeMaterials[material]) {
-                            compositeMaterials[material] = 0;
+                        if (!composites[material]) {
+                            composites[material] = 0;
                         }
-                        compositeMaterials[material] += items[userItem][material];
+                        composites[material] += items[userItem][material];
                     }
                 });
             }
     });
 
     // add another pass to get composite materials to build composite materials
-    Object.entries(compositeMaterials)
+    Object.entries(composites)
         .flatMap(([material, ct]) =>
             (Object.entries(items[material] ?? [])
                 .map(([subMaterial, subCt]) => [subMaterial, subCt * ct])) as [string, number][])
         .filter(([material]) => items[material])
         .forEach(([material, ct]) => {
-            if (!compositeMaterials[material]) {
-                compositeMaterials[material] = 0;
+            if (!subComposites[material]) {
+                subComposites[material] = 0;
             }
-            compositeMaterials[material] += ct;
+            subComposites[material] += ct;
         });
 
-    return compositeMaterials;
+    return { "Composites": composites, "Sub-Composites (Not including above)": subComposites };
 };
