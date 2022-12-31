@@ -133,5 +133,18 @@ export const getCompositeMaterials = (
             }
     });
 
+    // add another pass to get composite materials to build composite materials
+    Object.entries(compositeMaterials)
+        .flatMap(([material, ct]) =>
+            (Object.entries(items[material] ?? [])
+                .map(([subMaterial, subCt]) => [subMaterial, subCt * ct])) as [string, number][])
+        .filter(([material]) => items[material])
+        .forEach(([material, ct]) => {
+            if (!compositeMaterials[material]) {
+                compositeMaterials[material] = 0;
+            }
+            compositeMaterials[material] += ct;
+        });
+
     return compositeMaterials;
 };
