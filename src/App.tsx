@@ -361,7 +361,7 @@ function App() {
             return (
               <div key={backNumber}>
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ minWidth: "33vw" }}>
+                  <div>
                     <h2>
                       Back #{backNumber + 1}{" "}
                       {!lockedBuild && (
@@ -615,7 +615,7 @@ function App() {
                         <div>
                           <textarea
                             rows={4}
-                            style={{ width: "100%", color: "black" }}
+                            style={{ width: "100%" }}
                             onChange={(e) => {
                               if (!lockedBuild) {
                                 let newBuild = [...build];
@@ -646,7 +646,7 @@ function App() {
                       )}
                     </div>
                   </div>
-                  <div style={{ marginLeft: "40px" }}>
+                  <div style={{ marginLeft: "2rem" }}>
                     <h2>Back #{backNumber + 1} raw material:</h2>
                     {Object.entries(
                       getRawMaterials(back.craftables, back.disabledCraftables!)
@@ -676,7 +676,7 @@ function App() {
                       }
                     })}
                   </div>
-                  <div style={{ marginLeft: "40px" }}>
+                  <div style={{ marginLeft: "2rem" }}>
                     <h2>
                       {showComposites[backNumber] &&
                         `Back #${backNumber + 1} composites: `}
