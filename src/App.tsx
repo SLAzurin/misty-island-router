@@ -113,6 +113,7 @@ function App() {
   const [showTotalRawMaterials, setShowTotalRawMaterials] = useState(false);
   const [lockedBuild, setLockedBuild] = useState(false);
   const [assetSize, setAssetSize] = useState(3);
+  const [minimalistMode, setMinimalistMode] = useState(false);
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
@@ -316,10 +317,24 @@ function App() {
                     ></input>
                   </h2>
                 </span>
+                <h2>
+                  Minimalist mode:{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMinimalistMode(!minimalistMode);
+                    }}
+                  >
+                    {minimalistMode ? "Disable" : "Enable"}
+                  </button>
+                </h2>
+                <p>
+                  This hides item names from raw materials, and composite
+                  materials, and makes the number bigger in size.
+                </p>
               </span>
             </div>
 
-            <h1>Build:</h1>
             {!lockedBuild && (
               <div style={{ display: "flex" }}>
                 <h2>Total resources usage (not counting disabled ones):</h2>
@@ -357,6 +372,7 @@ function App() {
                 }
               )}
           </div>
+          <h1>Build:</h1>
           {build.map((back, backNumber) => {
             return (
               <div key={backNumber}>
@@ -472,9 +488,9 @@ function App() {
                                 })}
                             </select>
                           ) : !back.disabledCraftables![structureIndex] ? (
-                            <div style={{ width: "100px" }}>{structure}</div>
+                            <div style={{ ...centerStyle, width: "100px" }}>{structure}</div>
                           ) : (
-                            <s style={{ width: "100px" }}>{structure}</s>
+                            <s style={{ ...centerStyle, width: "100px" }}>{structure}</s>
                           )}
                           {typeof back.disabledCraftables !== "undefined" &&
                             structureIndex < back.disabledCraftables.length &&
@@ -666,9 +682,23 @@ function App() {
                               style={assetStyle(assetSize)}
                               src={getAsset(rawMaterial)}
                             ></img>
-                            <span style={{ ...centerStyle, marginLeft: "1vw" }}>
-                              {count} {rawMaterial}
-                            </span>
+                            {!minimalistMode ? (
+                              <span
+                                style={{ ...centerStyle, marginLeft: "1vw" }}
+                              >
+                                {count} {rawMaterial}
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  ...centerStyle,
+                                  marginLeft: "1vw",
+                                  fontSize: "2rem",
+                                }}
+                              >
+                                {count}
+                              </span>
+                            )}
                           </div>
                         );
                       } else {
@@ -712,9 +742,23 @@ function App() {
                               style={assetStyle(assetSize)}
                               src={getAsset(rawMaterial)}
                             />
-                            <span style={{ ...centerStyle, marginLeft: "1vw" }}>
-                              {count} {rawMaterial}
-                            </span>
+                            {!minimalistMode ? (
+                              <span
+                                style={{ ...centerStyle, marginLeft: "1vw" }}
+                              >
+                                {count} {rawMaterial}
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  ...centerStyle,
+                                  marginLeft: "1vw",
+                                  fontSize: "2rem",
+                                }}
+                              >
+                                {count}
+                              </span>
+                            )}
                           </div>
                         );
                       })}
