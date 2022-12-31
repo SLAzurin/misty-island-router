@@ -8,8 +8,11 @@ interface IBuild {
   note?: string;
 }
 
-const assetStyle: CSSProperties = {
-  height: "5vh",
+const assetStyle = (unit: number): CSSProperties => {
+  return {
+    height: `${unit}rem`,
+    width: `${unit}rem`,
+  };
 };
 const centerStyle: CSSProperties = {
   height: "fit-content",
@@ -108,6 +111,8 @@ function App() {
     new Array(build.length).fill("")
   );
   const [showTotalRawMaterials, setShowTotalRawMaterials] = useState(false);
+  const [lockedBuild, setLockedBuild] = useState(false);
+  const [assetSize, setAssetSize] = useState(3);
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build];
@@ -272,17 +277,63 @@ function App() {
         <div>
           <div>
             <div style={{ display: "flex" }}>
-              <h2>Total resources usage (not counting disabled ones):</h2>
-              <button
-                style={{ ...centerStyle, marginLeft: "1vw" }}
-                type="button"
-                onClick={() => {
-                  setShowTotalRawMaterials(!showTotalRawMaterials);
-                }}
-              >
-                {showTotalRawMaterials ? "Hide" : "Click here to show"}
-              </button>
+              <span>
+                <h2>Options:</h2>
+                <h4>
+                  Tip: If you're on mobile, use `Lock build` and make your icons
+                  larger!
+                </h4>
+                <h2>
+                  Lock build:{" "}
+                  <button
+                    style={{ ...centerStyle, marginLeft: "1vw" }}
+                    type="button"
+                    onClick={() => {
+                      setLockedBuild(!lockedBuild);
+                    }}
+                  >
+                    {lockedBuild ? "Unlock build" : "Lock Build"}
+                  </button>
+                </h2>
+                <p>
+                  This hides all add/remove buttons.
+                  <br />
+                  When the build is locked, click on the image to mark item as
+                  disabled.
+                </p>
+                <span>
+                  <h2>
+                    Image size:
+                    <input
+                      type={"number"}
+                      min={1}
+                      max={10}
+                      value={assetSize}
+                      onChange={(e) => {
+                        setAssetSize(Number(e.target.value));
+                      }}
+                      style={{ marginLeft: "1vw" }}
+                    ></input>
+                  </h2>
+                </span>
+              </span>
             </div>
+
+            <h1>Build:</h1>
+            {!lockedBuild && (
+              <div style={{ display: "flex" }}>
+                <h2>Total resources usage (not counting disabled ones):</h2>
+                <button
+                  style={{ ...centerStyle, marginLeft: "1vw" }}
+                  type="button"
+                  onClick={() => {
+                    setShowTotalRawMaterials(!showTotalRawMaterials);
+                  }}
+                >
+                  {showTotalRawMaterials ? "Hide" : "Click here to show"}
+                </button>
+              </div>
+            )}
             {showTotalRawMaterials &&
               Object.entries(getTotalMaterials(build)).map(
                 ([rawMaterial, count], i) => {
@@ -295,7 +346,7 @@ function App() {
                         <img
                           alt={rawMaterial}
                           src={getAsset(rawMaterial)}
-                          style={assetStyle}
+                          style={assetStyle(assetSize)}
                         ></img>
                         <p style={{ marginLeft: "1vw" }}>
                           {count} {rawMaterial}
@@ -310,98 +361,124 @@ function App() {
             return (
               <div key={backNumber}>
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div>
+                  <div style={{ minWidth: "33vw" }}>
                     <h2>
                       Back #{backNumber + 1}{" "}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          deleteBack(backNumber);
-                        }}
-                      >
-                        Delete
-                      </button>
+                      {!lockedBuild && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            deleteBack(backNumber);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </h2>
                     {back.craftables.map((structure, structureIndex) => {
                       return (
                         <div key={structureIndex} style={{ display: "flex" }}>
-                          <button
-                            type="button"
-                            style={{ width: "3vw" }}
-                            disabled={structureIndex === 0}
-                            onClick={() => {
-                              moveUp(backNumber, structureIndex);
-                            }}
-                          >
-                            ↑
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              deleteCraftable(backNumber, structureIndex);
-                            }}
-                            style={centerStyle}
-                          >
-                            Delete
-                          </button>
+                          {!lockedBuild && (
+                            <>
+                              <button
+                                type="button"
+                                style={{ width: "3vw" }}
+                                disabled={structureIndex === 0}
+                                onClick={() => {
+                                  moveUp(backNumber, structureIndex);
+                                }}
+                              >
+                                ↑
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  deleteCraftable(backNumber, structureIndex);
+                                }}
+                                style={centerStyle}
+                              >
+                                Delete
+                              </button>
 
-                          <button
-                            disabled={
-                              structureIndex === back.craftables.length - 1
-                            }
-                            type="button"
-                            style={{ width: "3vw" }}
-                            onClick={() => {
-                              moveDown(backNumber, structureIndex);
-                            }}
-                          >
-                            ↓
-                          </button>
+                              <button
+                                disabled={
+                                  structureIndex === back.craftables.length - 1
+                                }
+                                type="button"
+                                style={{ width: "3vw" }}
+                                onClick={() => {
+                                  moveDown(backNumber, structureIndex);
+                                }}
+                              >
+                                ↓
+                              </button>
+                            </>
+                          )}
 
                           <img
+                            onClick={() => {
+                              if (lockedBuild) {
+                                let newBuild = [...build];
+                                newBuild[backNumber].disabledCraftables![
+                                  structureIndex
+                                ] =
+                                  !newBuild[backNumber].disabledCraftables![
+                                    structureIndex
+                                  ];
+                                setBuild(newBuild);
+                              }
+                            }}
                             alt={structure}
-                            style={assetStyle}
+                            style={assetStyle(assetSize)}
                             src={getAsset(structure)}
                           />
-                          <select
-                            style={centerStyle}
-                            title={
-                              "edit-craftable-" +
-                              backNumber +
-                              "-" +
-                              structureIndex
-                            }
-                            name={
-                              "edit-craftable-" +
-                              backNumber +
-                              "-" +
-                              structureIndex
-                            }
-                            value={structure}
-                            onChange={(e) => {
-                              editCraftable(
-                                backNumber,
-                                structureIndex,
-                                e.target.value
-                              );
-                            }}
-                          >
-                            {Object.keys(items)
-                              .sort()
-                              .map((itemName, itemIndex) => {
-                                // fake indices
-                                return (
-                                  <option
-                                    key={`${backNumber}_${structureIndex}_${itemIndex}`}
-                                    value={itemName}
-                                  >
-                                    {itemName}
-                                  </option>
-                                );
-                              })}
-                          </select>
+                          {!lockedBuild ? (
+                            <select
+                              style={centerStyle}
+                              title={
+                                "edit-craftable-" +
+                                backNumber +
+                                "-" +
+                                structureIndex
+                              }
+                              name={
+                                "edit-craftable-" +
+                                backNumber +
+                                "-" +
+                                structureIndex
+                              }
+                              value={structure}
+                              onChange={(e) => {
+                                if (!lockedBuild)
+                                  editCraftable(
+                                    backNumber,
+                                    structureIndex,
+                                    e.target.value
+                                  );
+                              }}
+                            >
+                              {Object.keys(items)
+                                .sort()
+                                .map((itemName, itemIndex) => {
+                                  // fake indices
+                                  return (
+                                    <option
+                                      key={`${backNumber}_${structureIndex}_${itemIndex}`}
+                                      value={itemName}
+                                    >
+                                      {itemName}
+                                    </option>
+                                  );
+                                })}
+                            </select>
+                          ) : !back.disabledCraftables![structureIndex] ? (
+                            <div style={{ width: "100px" }}>{structure}</div>
+                          ) : (
+                            <s style={{ width: "100px" }}>{structure}</s>
+                          )}
                           {typeof back.disabledCraftables !== "undefined" &&
-                            structureIndex < back.disabledCraftables.length && (
+                            structureIndex < back.disabledCraftables.length &&
+                            !lockedBuild && (
                               <div style={{ display: "flex" }}>
                                 <input
                                   id={
@@ -451,113 +528,122 @@ function App() {
                         </div>
                       );
                     })}
-                    <label>Add craftable:</label>
-                    {!searchMode[backNumber] && (
-                      <select
-                        name={"add-craftable-" + backNumber}
-                        title={"add-craftable-" + backNumber}
-                        onChange={(e) => {
-                          if (e.target.value !== "")
-                            addCraftable(backNumber, e.target.value);
-                        }}
-                        value={""}
-                      >
-                        <option value={""}></option>
-                        {Object.keys(items)
-                          .sort()
-                          .map((itemName, itemIndex) => {
-                            return (
-                              <option
-                                key={`addcraftable${backNumber}_${itemIndex}`}
-                                value={itemName}
-                              >
-                                {itemName}
-                              </option>
-                            );
-                          })}
-                      </select>
-                    )}
-                    {searchMode[backNumber] && (
-                      <div>
-                        <input
-                          placeholder="Search item name here..."
-                          value={searchTerms[backNumber]}
-                          onChange={(e) => {
-                            let newSearchTerm = [...searchTerms];
-                            newSearchTerm[backNumber] = e.target.value;
-                            setSearchTerms(newSearchTerm);
-                          }}
-                        ></input>
-                        <div>
-                          {searchTerms[backNumber].length !== 0 &&
-                            Object.keys(items).map((itemName) => {
-                              if (
-                                itemName
-                                  .toLowerCase()
-                                  .includes(
-                                    searchTerms[backNumber].toLowerCase()
-                                  )
-                              ) {
+                    {!lockedBuild && (
+                      <>
+                        <label>Add craftable:</label>
+                        {!searchMode[backNumber] && (
+                          <select
+                            name={"add-craftable-" + backNumber}
+                            title={"add-craftable-" + backNumber}
+                            onChange={(e) => {
+                              if (e.target.value !== "")
+                                addCraftable(backNumber, e.target.value);
+                            }}
+                            value={""}
+                          >
+                            <option value={""}></option>
+                            {Object.keys(items)
+                              .sort()
+                              .map((itemName, itemIndex) => {
                                 return (
-                                  <button
-                                    onClick={() => {
-                                      addCraftable(backNumber, itemName);
-                                    }}
+                                  <option
+                                    key={`addcraftable${backNumber}_${itemIndex}`}
+                                    value={itemName}
                                   >
                                     {itemName}
-                                  </button>
+                                  </option>
                                 );
-                              }
-                              return null;
-                            })}
-                        </div>
-                      </div>
+                              })}
+                          </select>
+                        )}
+                        {searchMode[backNumber] && (
+                          <div>
+                            <input
+                              placeholder="Search item name here..."
+                              value={searchTerms[backNumber]}
+                              onChange={(e) => {
+                                let newSearchTerm = [...searchTerms];
+                                newSearchTerm[backNumber] = e.target.value;
+                                setSearchTerms(newSearchTerm);
+                              }}
+                            ></input>
+                            <div>
+                              {searchTerms[backNumber].length !== 0 &&
+                                Object.keys(items).map((itemName) => {
+                                  if (
+                                    itemName
+                                      .toLowerCase()
+                                      .includes(
+                                        searchTerms[backNumber].toLowerCase()
+                                      )
+                                  ) {
+                                    return (
+                                      <button
+                                        onClick={() => {
+                                          addCraftable(backNumber, itemName);
+                                        }}
+                                      >
+                                        {itemName}
+                                      </button>
+                                    );
+                                  }
+                                  return null;
+                                })}
+                            </div>
+                          </div>
+                        )}
+                        <input
+                          id={`searchmode-${backNumber}`}
+                          type={"checkbox"}
+                          onChange={() => {
+                            let newSearchMode = [...searchMode];
+                            newSearchMode[backNumber] =
+                              !newSearchMode[backNumber];
+                            setSearchMode(newSearchMode);
+                          }}
+                          checked={searchMode[backNumber]}
+                        ></input>
+                        <label htmlFor={`searchmode-${backNumber}`}>
+                          {searchMode[backNumber]
+                            ? "Uncheck for dropdown mode"
+                            : "Check for text search mode"}
+                        </label>
+                      </>
                     )}
-                    <input
-                      id={`searchmode-${backNumber}`}
-                      type={"checkbox"}
-                      onChange={() => {
-                        let newSearchMode = [...searchMode];
-                        newSearchMode[backNumber] = !newSearchMode[backNumber];
-                        setSearchMode(newSearchMode);
-                      }}
-                      checked={searchMode[backNumber]}
-                    ></input>
-                    <label htmlFor={`searchmode-${backNumber}`}>
-                      {searchMode[backNumber]
-                        ? "Uncheck for dropdown mode"
-                        : "Check for text search mode"}
-                    </label>
                     <div>
                       {typeof back.note !== "undefined" && (
                         <div>
                           <textarea
                             rows={4}
-                            style={{ width: "100%" }}
+                            style={{ width: "100%", color: "black" }}
                             onChange={(e) => {
-                              let newBuild = [...build];
-                              newBuild[backNumber].note = e.target.value;
-                              setBuild(newBuild);
+                              if (!lockedBuild) {
+                                let newBuild = [...build];
+                                newBuild[backNumber].note = e.target.value;
+                                setBuild(newBuild);
+                              }
                             }}
                             value={back.note}
                           />
                         </div>
                       )}
-                      <button
-                        onClick={() => {
-                          let newBuild = [...build];
-                          if (typeof back.note === "undefined") {
-                            newBuild[backNumber].note = "";
-                          } else {
-                            delete newBuild[backNumber].note;
-                          }
-                          setBuild(newBuild);
-                        }}
-                      >
-                        {typeof back.note !== "undefined"
-                          ? "Delete Note"
-                          : "Add Note"}
-                      </button>
+                      {!lockedBuild && (
+                        <button
+                          onClick={() => {
+                            let newBuild = [...build];
+                            if (typeof back.note === "undefined") {
+                              newBuild[backNumber].note = "";
+                            } else {
+                              delete newBuild[backNumber].note;
+                            }
+                            setBuild(newBuild);
+                          }}
+                        >
+                          {typeof back.note !== "undefined"
+                            ? "Delete Note"
+                            : "Add Note"}
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div style={{ marginLeft: "40px" }}>
@@ -577,7 +663,7 @@ function App() {
                           >
                             <img
                               alt={rawMaterial}
-                              style={assetStyle}
+                              style={assetStyle(assetSize)}
                               src={getAsset(rawMaterial)}
                             ></img>
                             <span style={{ ...centerStyle, marginLeft: "1vw" }}>
@@ -623,7 +709,7 @@ function App() {
                           >
                             <img
                               alt={rawMaterial}
-                              style={assetStyle}
+                              style={assetStyle(assetSize)}
                               src={getAsset(rawMaterial)}
                             />
                             <span style={{ ...centerStyle, marginLeft: "1vw" }}>
@@ -634,25 +720,29 @@ function App() {
                       })}
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    addBack(backNumber);
-                  }}
-                >
-                  Add back HERE
-                </button>
+                {!lockedBuild && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addBack(backNumber);
+                    }}
+                  >
+                    Add back HERE
+                  </button>
+                )}
               </div>
             );
           })}
         </div>
-        <button
-          onClick={() => {
-            addBack();
-          }}
-        >
-          Add back
-        </button>
+        {!lockedBuild && (
+          <button
+            onClick={() => {
+              addBack();
+            }}
+          >
+            Add back
+          </button>
+        )}
         <div style={{ marginTop: "4vh" }}>
           Made by Azuri (aka{" "}
           <a
@@ -695,13 +785,15 @@ function App() {
               placeholder="Copy paste a build export here..."
             ></textarea>
           )}
-          <button
-            onClick={() => {
-              setShowImportRouteTextarea(!showImportRouteTextarea);
-            }}
-          >
-            Import Route
-          </button>
+          {!lockedBuild && (
+            <button
+              onClick={() => {
+                setShowImportRouteTextarea(!showImportRouteTextarea);
+              }}
+            >
+              Import Route
+            </button>
+          )}
           <button
             onClick={() => {
               if (
@@ -718,13 +810,15 @@ function App() {
           >
             Export Route to clipboard
           </button>
-          <button
-            onClick={() => {
-              setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2));
-            }}
-          >
-            Import Mikeychain's Lazy 2.0 Route for Challenge Mode
-          </button>
+          {!lockedBuild && (
+            <button
+              onClick={() => {
+                setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2));
+              }}
+            >
+              Import Mikeychain's Lazy 2.0 Route for Challenge Mode
+            </button>
+          )}
         </div>
       </div>
     </div>
