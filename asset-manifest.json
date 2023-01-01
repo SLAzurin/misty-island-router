@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/misty-island-router/static/js/main.b895421b.js",
+    "main.js": "/misty-island-router/static/js/main.f77c9808.js",
     "static/media/notfound.png": "/misty-island-router/static/media/notfound.b680f18eeb26770ca435.png",
     "static/media/stir-fried-seafood.png": "/misty-island-router/static/media/stir-fried-seafood.5fb0046753cdc7dd5f8d.png",
     "static/media/grilled-banana.png": "/misty-island-router/static/media/grilled-banana.482abcc0f23af3a6f8a8.png",
     "static/media/grilled-fish.png": "/misty-island-router/static/media/grilled-fish.378f5ee0364236e39fb8.png",
     "index.html": "/misty-island-router/index.html",
-    "main.b895421b.js.map": "/misty-island-router/static/js/main.b895421b.js.map"
+    "main.f77c9808.js.map": "/misty-island-router/static/js/main.f77c9808.js.map"
   },
   "entrypoints": [
-    "static/js/main.b895421b.js"
+    "static/js/main.f77c9808.js"
   ]
 }
