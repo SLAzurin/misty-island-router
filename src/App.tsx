@@ -737,10 +737,10 @@ function App() {
                           back.craftables,
                           back.disabledCraftables!
                         )
-                      ).map(([compositeType, composites]) => {
+                      ).map(([compositeType, composites], i) => {
                         if (Object.keys(composites).length !== 0)
                           return (
-                            <div>
+                            <div key={"list-composites-" + i}>
                               <h4>{compositeType}</h4>
                               {Object.entries(composites).map(
                                 ([rawMaterial, count], rawMaterialIndex) => {
