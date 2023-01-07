@@ -816,9 +816,9 @@ function App() {
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://twitch.tv/AzuriAdore"
+            href="https://twitch.tv/AzurinDayo"
           >
-            AzuriAdore
+            AzurinDayo
           </a>{" "}
           on Twitch,{" "}
           <a
