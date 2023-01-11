@@ -1,5 +1,9 @@
 import { CSSProperties, useEffect, useState } from "react";
-import { items, sampleBuildMikeychainV2 } from "./data";
+import {
+  items,
+  sampleBuildAzuriSurvivalArchitectL3,
+  sampleBuildMikeychainV2,
+} from "./data";
 import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
 
 interface IBuild {
@@ -844,7 +848,11 @@ function App() {
             ulucs
           </a>{" "}
           for adding the sub-composites{" "}
-          <a target="_blank" rel="noreferrer" href="https://github.com/SLAzurin/misty-island-router/pull/2">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/SLAzurin/misty-island-router/pull/2"
+          >
             feature
           </a>
           !
@@ -889,15 +897,32 @@ function App() {
           >
             Export Route to clipboard
           </button>
-          {!lockedBuild && (
-            <button
-              onClick={() => {
-                setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2));
-              }}
-            >
-              Import Mikeychain's Lazy 2.0 Route for Challenge Mode
-            </button>
-          )}
+          <br />
+          <br />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {!lockedBuild && (
+              <button
+                onClick={() => {
+                  setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2));
+                }}
+              >
+                Import Mikeychain's Lazy 2.0 Route for Challenge Mode
+              </button>
+            )}
+            <br />
+            {!lockedBuild && (
+              <button
+                onClick={() => {
+                  setBuildExportStr(
+                    JSON.stringify(sampleBuildAzuriSurvivalArchitectL3)
+                  );
+                }}
+              >
+                Import Azuri's high upgrade points, EZCLAP and semi-overkill route
+                (must have survival architect L3)
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
