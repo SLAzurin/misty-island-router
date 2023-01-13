@@ -1,32 +1,32 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from 'react'
 import {
   items,
   sampleBuildAzuriSurvivalArchitectL3,
-  sampleBuildMikeychainV2,
-} from "./data";
-import { getCompositeMaterials, getRawMaterials } from "./helpers/ItemsHelper";
+  sampleBuildMikeychainV2
+} from './data'
+import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
 
 interface IBuild {
-  craftables: string[];
-  disabledCraftables?: boolean[];
-  note?: string;
+  craftables: string[]
+  disabledCraftables?: boolean[]
+  note?: string
 }
 
 const assetStyle = (unit: number): CSSProperties => {
   return {
     height: `${unit}rem`,
-    width: `${unit}rem`,
-  };
-};
+    width: `${unit}rem`
+  }
+}
 const centerStyle: CSSProperties = {
-  height: "fit-content",
-  alignSelf: "center",
-};
+  height: 'fit-content',
+  alignSelf: 'center'
+}
 
 const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
   let allRawMaterials: {
-    [key: string]: number;
-  } = {};
+    [key: string]: number
+  } = {}
   build.forEach((back, backBumber) => {
     for (let [rawMaterial, count] of Object.entries(
       getRawMaterials(
@@ -34,209 +34,209 @@ const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
         build[backBumber].disabledCraftables as boolean[]
       )
     )) {
-      if (!allRawMaterials[rawMaterial]) allRawMaterials[rawMaterial] = 0;
-      allRawMaterials[rawMaterial] += count;
+      if (!allRawMaterials[rawMaterial]) allRawMaterials[rawMaterial] = 0
+      allRawMaterials[rawMaterial] += count
     }
-  });
-  return allRawMaterials;
-};
+  })
+  return allRawMaterials
+}
 
 const getAsset = (materialName: string): any => {
-  let resource: any = null;
+  let resource: any = null
   let filename = materialName
     .toLowerCase()
-    .replaceAll(" ", "-")
-    .replaceAll("'", "")
-    .replaceAll("(l)", "l")
-    .replaceAll("(s)", "s")
-    .replaceAll("!", "")
-    .replaceAll("[tr:-knockback-resistance-shoes]", "")
-    .replaceAll("-one-time-coupon", "");
+    .replaceAll(' ', '-')
+    .replaceAll("'", '')
+    .replaceAll('(l)', 'l')
+    .replaceAll('(s)', 's')
+    .replaceAll('!', '')
+    .replaceAll('[tr:-knockback-resistance-shoes]', '')
+    .replaceAll('-one-time-coupon', '')
   if (
-    filename.endsWith("-a") ||
-    filename.endsWith("-b") ||
-    filename.endsWith("-c") ||
-    filename.endsWith("-d") ||
-    filename.endsWith("-e") ||
-    filename.endsWith("-f") ||
-    filename.endsWith("-g")
+    filename.endsWith('-a') ||
+    filename.endsWith('-b') ||
+    filename.endsWith('-c') ||
+    filename.endsWith('-d') ||
+    filename.endsWith('-e') ||
+    filename.endsWith('-f') ||
+    filename.endsWith('-g')
   ) {
-    filename = filename.substring(0, filename.length - 2);
+    filename = filename.substring(0, filename.length - 2)
   }
   try {
-    resource = require(`./assets/images/${filename}.png`);
+    resource = require(`./assets/images/${filename}.png`)
   } catch (e: any) {
-    resource = require(`./assets/images/notfound.png`);
+    resource = require(`./assets/images/notfound.png`)
   }
-  return resource;
-};
+  return resource
+}
 
 const fixPreviouslyBrokenItems = (build: IBuild[]) => {
-  let newBuild = [...build];
+  let newBuild = [...build]
   for (let i = 0; i < newBuild.length; i++) {
     for (let j = 0; j < newBuild[i].craftables.length; j++) {
-      if (newBuild[i].craftables[j] === "Bow :1,	Iron") {
-        newBuild[i].craftables[j] = "Bow";
+      if (newBuild[i].craftables[j] === 'Bow :1,	Iron') {
+        newBuild[i].craftables[j] = 'Bow'
       }
     }
   }
-  return newBuild;
-};
+  return newBuild
+}
 
 const formatIBuild = (build: IBuild[] | string[][]): IBuild[] => {
   if (build.length === 0) {
-    return [];
+    return []
   }
   if (!Array.isArray(build[0])) {
-    return fixPreviouslyBrokenItems(build as IBuild[]);
+    return fixPreviouslyBrokenItems(build as IBuild[])
   }
   for (let i = 0; i < build.length; i++) {
-    build[i] = { craftables: build[i] as string[] };
+    build[i] = { craftables: build[i] as string[] }
   }
-  return fixPreviouslyBrokenItems(build as IBuild[]);
-};
+  return fixPreviouslyBrokenItems(build as IBuild[])
+}
 
 function App() {
   const [build, setBuild] = useState<IBuild[]>(
-    localStorage.getItem("mistyislandbuild")
+    localStorage.getItem('mistyislandbuild')
       ? formatIBuild(
-          JSON.parse(localStorage.getItem("mistyislandbuild") as string)
+          JSON.parse(localStorage.getItem('mistyislandbuild') as string)
         )
       : sampleBuildMikeychainV2
-  );
-  const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build));
-  const [buildExportStrError, setBuildExportStrError] = useState("");
-  const [showComposites, setShowComposites] = useState<boolean[]>([]);
-  const [showImportRouteTextarea, setShowImportRouteTextarea] = useState(false);
+  )
+  const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build))
+  const [buildExportStrError, setBuildExportStrError] = useState('')
+  const [showComposites, setShowComposites] = useState<boolean[]>([])
+  const [showImportRouteTextarea, setShowImportRouteTextarea] = useState(false)
   const [searchMode, setSearchMode] = useState<boolean[]>(
     new Array(build.length).fill(false)
-  );
+  )
   const [searchTerms, setSearchTerms] = useState<string[]>(
-    new Array(build.length).fill("")
-  );
-  const [showTotalRawMaterials, setShowTotalRawMaterials] = useState(false);
-  const [lockedBuild, setLockedBuild] = useState(false);
-  const [assetSize, setAssetSize] = useState(3);
-  const [minimalistMode, setMinimalistMode] = useState(false);
+    new Array(build.length).fill('')
+  )
+  const [showTotalRawMaterials, setShowTotalRawMaterials] = useState(false)
+  const [lockedBuild, setLockedBuild] = useState(false)
+  const [assetSize, setAssetSize] = useState(3)
+  const [minimalistMode, setMinimalistMode] = useState(false)
 
   const addBack = (afterBackNumber?: number) => {
-    let newBuild = [...build];
-    if (typeof afterBackNumber !== "undefined") {
+    let newBuild = [...build]
+    if (typeof afterBackNumber !== 'undefined') {
       newBuild.splice(afterBackNumber + 1, 0, {
         craftables: [],
-        disabledCraftables: [],
-      });
+        disabledCraftables: []
+      })
     } else {
-      newBuild.push({ craftables: [], disabledCraftables: [] });
+      newBuild.push({ craftables: [], disabledCraftables: [] })
     }
-    setBuild(newBuild);
-  };
+    setBuild(newBuild)
+  }
 
   const deleteBack = (backNummber: number) => {
-    let newBuild = [...build];
-    newBuild.splice(backNummber, 1);
-    setBuild(newBuild);
-  };
+    let newBuild = [...build]
+    newBuild.splice(backNummber, 1)
+    setBuild(newBuild)
+  }
 
   const addCraftable = (backNumber: number, craftableName: string) => {
-    let newBuild = [...build];
-    newBuild[backNumber].craftables.push(craftableName);
-    if (typeof newBuild[backNumber].disabledCraftables !== "undefined") {
-      newBuild[backNumber].disabledCraftables!.push(false);
+    let newBuild = [...build]
+    newBuild[backNumber].craftables.push(craftableName)
+    if (typeof newBuild[backNumber].disabledCraftables !== 'undefined') {
+      newBuild[backNumber].disabledCraftables!.push(false)
     }
-    setBuild(newBuild);
-  };
+    setBuild(newBuild)
+  }
 
   const deleteCraftable = (backNumber: number, craftableIndex: number) => {
-    let newBuild = [...build];
-    newBuild[backNumber].craftables.splice(craftableIndex, 1);
-    if (typeof newBuild[backNumber].disabledCraftables !== "undefined") {
-      newBuild[backNumber].disabledCraftables!.splice(craftableIndex, 1);
+    let newBuild = [...build]
+    newBuild[backNumber].craftables.splice(craftableIndex, 1)
+    if (typeof newBuild[backNumber].disabledCraftables !== 'undefined') {
+      newBuild[backNumber].disabledCraftables!.splice(craftableIndex, 1)
     }
-    setBuild(newBuild);
-  };
+    setBuild(newBuild)
+  }
 
   const editCraftable = (
     backNumber: number,
     craftableIndex: number,
     craftableName: string
   ) => {
-    let newBuild = [...build];
-    newBuild[backNumber].craftables[craftableIndex] = craftableName;
-    setBuild(newBuild);
-  };
+    let newBuild = [...build]
+    newBuild[backNumber].craftables[craftableIndex] = craftableName
+    setBuild(newBuild)
+  }
 
   const moveUp = (backNumber: number, craftableIndex: number) => {
-    let newBuild = [...build];
-    let temp = newBuild[backNumber].craftables[craftableIndex - 1];
+    let newBuild = [...build]
+    let temp = newBuild[backNumber].craftables[craftableIndex - 1]
     let tempDisabled =
-      newBuild[backNumber].disabledCraftables![craftableIndex - 1];
+      newBuild[backNumber].disabledCraftables![craftableIndex - 1]
     newBuild[backNumber].craftables[craftableIndex - 1] =
-      newBuild[backNumber].craftables[craftableIndex];
-    newBuild[backNumber].craftables[craftableIndex] = temp;
+      newBuild[backNumber].craftables[craftableIndex]
+    newBuild[backNumber].craftables[craftableIndex] = temp
     newBuild[backNumber].disabledCraftables![craftableIndex - 1] =
-      newBuild[backNumber].disabledCraftables![craftableIndex];
-    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled;
-    setBuild(newBuild);
-  };
+      newBuild[backNumber].disabledCraftables![craftableIndex]
+    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled
+    setBuild(newBuild)
+  }
   const moveDown = (backNumber: number, craftableIndex: number) => {
-    let newBuild = [...build];
-    let temp = newBuild[backNumber].craftables[craftableIndex + 1];
+    let newBuild = [...build]
+    let temp = newBuild[backNumber].craftables[craftableIndex + 1]
     let tempDisabled =
-      newBuild[backNumber].disabledCraftables![craftableIndex + 1];
+      newBuild[backNumber].disabledCraftables![craftableIndex + 1]
     newBuild[backNumber].craftables[craftableIndex + 1] =
-      newBuild[backNumber].craftables[craftableIndex];
-    newBuild[backNumber].craftables[craftableIndex] = temp;
+      newBuild[backNumber].craftables[craftableIndex]
+    newBuild[backNumber].craftables[craftableIndex] = temp
     newBuild[backNumber].disabledCraftables![craftableIndex + 1] =
-      newBuild[backNumber].disabledCraftables![craftableIndex];
-    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled;
-    setBuild(newBuild);
-  };
+      newBuild[backNumber].disabledCraftables![craftableIndex]
+    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled
+    setBuild(newBuild)
+  }
 
   useEffect(() => {
-    let newBuild: IBuild[];
+    let newBuild: IBuild[]
     try {
-      newBuild = formatIBuild(JSON.parse(buildExportStr));
+      newBuild = formatIBuild(JSON.parse(buildExportStr))
     } catch (e) {
-      setBuildExportStrError("Invalid JSON, please retry...");
-      return;
+      setBuildExportStrError('Invalid JSON, please retry...')
+      return
     }
 
     try {
       newBuild.forEach((back) => {
-        getRawMaterials(back.craftables, back.disabledCraftables!);
-      });
+        getRawMaterials(back.craftables, back.disabledCraftables!)
+      })
     } catch (e: any) {
-      setBuildExportStrError(e.toString());
-      return;
+      setBuildExportStrError(e.toString())
+      return
     }
 
     newBuild.forEach((back, i) => {
       if (
-        typeof back.disabledCraftables === "undefined" ||
+        typeof back.disabledCraftables === 'undefined' ||
         back.disabledCraftables.length !== back.craftables.length
       ) {
-        newBuild[i].disabledCraftables = [];
+        newBuild[i].disabledCraftables = []
         back.craftables.forEach(() => {
-          newBuild[i].disabledCraftables!.push(false);
-        });
+          newBuild[i].disabledCraftables!.push(false)
+        })
       }
-    });
+    })
 
-    setBuildExportStrError("");
-    setBuild(newBuild);
-    setShowImportRouteTextarea(false);
-  }, [buildExportStr]);
+    setBuildExportStrError('')
+    setBuild(newBuild)
+    setShowImportRouteTextarea(false)
+  }, [buildExportStr])
 
   useEffect(() => {
-    setShowComposites(new Array(build.length).fill(true));
-    setSearchMode(new Array(build.length).fill(true));
-    setSearchTerms(new Array(build.length).fill(""));
-    localStorage.setItem("mistyislandbuild", JSON.stringify(build));
-  }, [build]);
+    setShowComposites(new Array(build.length).fill(true))
+    setSearchMode(new Array(build.length).fill(true))
+    setSearchTerms(new Array(build.length).fill(''))
+    localStorage.setItem('mistyislandbuild', JSON.stringify(build))
+  }, [build])
 
   return (
-    <div style={{ marginBottom: "20vh" }}>
+    <div style={{ marginBottom: '20vh' }}>
       <h1>Big warning:</h1>
       <h3>
         <br />
@@ -247,25 +247,25 @@ function App() {
         without a solid foundation.
         <br />
         <br />
-        <span style={{ color: "red" }}>NEW! </span>
+        <span style={{ color: 'red' }}>NEW! </span>
         I recently added Mikeychain's Challenge Mode Lazy build 2.0 as a build
         template.
         <br />
         Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
         for Challenge Mode".
         <br />
-        Video tutorial here:{" "}
+        Video tutorial here:{' '}
         <a
           href="https://www.youtube.com/watch?v=MVMTjHSZIZY"
-          target={"_blank"}
-          rel={"noreferrer"}
+          target={'_blank'}
+          rel={'noreferrer'}
         >
           https://www.youtube.com/watch?v=MVMTjHSZIZY
         </a>
         <br />
         <br />
         If there are other issues, please leave a comment on my original reddit
-        post{" "}
+        post{' '}
         <a
           target="_blank"
           rel="noreferrer"
@@ -278,10 +278,10 @@ function App() {
         <br />
         Sorry for the inconvenience, and thanks for using this tool.
       </h3>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
           <div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: 'flex' }}>
               <span>
                 <h2>Options:</h2>
                 <h4>
@@ -289,15 +289,18 @@ function App() {
                   larger!
                 </h4>
                 <h2>
-                  Lock build:{" "}
+                  Lock build:{' '}
                   <button
-                    style={{ ...centerStyle, marginLeft: "1vw" }}
+                    style={{
+                      ...centerStyle,
+                      marginLeft: '1vw'
+                    }}
                     type="button"
                     onClick={() => {
-                      setLockedBuild(!lockedBuild);
+                      setLockedBuild(!lockedBuild)
                     }}
                   >
-                    {lockedBuild ? "Unlock build" : "Lock Build"}
+                    {lockedBuild ? 'Unlock build' : 'Lock Build'}
                   </button>
                 </h2>
                 <p>
@@ -310,26 +313,26 @@ function App() {
                   <h2>
                     Image size:
                     <input
-                      type={"number"}
+                      type={'number'}
                       min={1}
                       max={10}
                       value={assetSize}
                       onChange={(e) => {
-                        setAssetSize(Number(e.target.value));
+                        setAssetSize(Number(e.target.value))
                       }}
-                      style={{ marginLeft: "1vw" }}
+                      style={{ marginLeft: '1vw' }}
                     ></input>
                   </h2>
                 </span>
                 <h2>
-                  Minimalist mode:{" "}
+                  Minimalist mode:{' '}
                   <button
                     type="button"
                     onClick={() => {
-                      setMinimalistMode(!minimalistMode);
+                      setMinimalistMode(!minimalistMode)
                     }}
                   >
-                    {minimalistMode ? "Disable" : "Enable"}
+                    {minimalistMode ? 'Disable' : 'Enable'}
                   </button>
                 </h2>
                 <p>
@@ -340,16 +343,19 @@ function App() {
             </div>
 
             {!lockedBuild && (
-              <div style={{ display: "flex" }}>
+              <div style={{ display: 'flex' }}>
                 <h2>Total resources usage (not counting disabled ones):</h2>
                 <button
-                  style={{ ...centerStyle, marginLeft: "1vw" }}
+                  style={{
+                    ...centerStyle,
+                    marginLeft: '1vw'
+                  }}
                   type="button"
                   onClick={() => {
-                    setShowTotalRawMaterials(!showTotalRawMaterials);
+                    setShowTotalRawMaterials(!showTotalRawMaterials)
                   }}
                 >
-                  {showTotalRawMaterials ? "Hide" : "Click here to show"}
+                  {showTotalRawMaterials ? 'Hide' : 'Click here to show'}
                 </button>
               </div>
             )}
@@ -360,19 +366,23 @@ function App() {
                     return (
                       <div
                         key={`build_total_material_${i}`}
-                        style={{ display: "flex" }}
+                        style={{ display: 'flex' }}
                       >
                         <img
                           alt={rawMaterial}
                           src={getAsset(rawMaterial)}
                           style={assetStyle(assetSize)}
                         ></img>
-                        <p style={{ marginLeft: "1vw" }}>
+                        <p
+                          style={{
+                            marginLeft: '1vw'
+                          }}
+                        >
                           {count} {rawMaterial}
                         </p>
                       </div>
-                    );
-                  return null;
+                    )
+                  return null
                 }
               )}
           </div>
@@ -380,15 +390,20 @@ function App() {
           {build.map((back, backNumber) => {
             return (
               <div key={backNumber}>
-                <div style={{ display: "flex", flexDirection: "row" }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row'
+                  }}
+                >
                   <div>
                     <h2>
-                      Back #{backNumber + 1}{" "}
+                      Back #{backNumber + 1}{' '}
                       {!lockedBuild && (
                         <button
                           type="button"
                           onClick={() => {
-                            deleteBack(backNumber);
+                            deleteBack(backNumber)
                           }}
                         >
                           Delete
@@ -397,15 +412,22 @@ function App() {
                     </h2>
                     {back.craftables.map((structure, structureIndex) => {
                       return (
-                        <div key={structureIndex} style={{ display: "flex" }}>
+                        <div
+                          key={structureIndex}
+                          style={{
+                            display: 'flex'
+                          }}
+                        >
                           {!lockedBuild && (
                             <>
                               <button
                                 type="button"
-                                style={{ width: "3vw" }}
+                                style={{
+                                  width: '3vw'
+                                }}
                                 disabled={structureIndex === 0}
                                 onClick={() => {
-                                  moveUp(backNumber, structureIndex);
+                                  moveUp(backNumber, structureIndex)
                                 }}
                               >
                                 ↑
@@ -413,7 +435,7 @@ function App() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  deleteCraftable(backNumber, structureIndex);
+                                  deleteCraftable(backNumber, structureIndex)
                                 }}
                                 style={centerStyle}
                               >
@@ -425,9 +447,11 @@ function App() {
                                   structureIndex === back.craftables.length - 1
                                 }
                                 type="button"
-                                style={{ width: "3vw" }}
+                                style={{
+                                  width: '3vw'
+                                }}
                                 onClick={() => {
-                                  moveDown(backNumber, structureIndex);
+                                  moveDown(backNumber, structureIndex)
                                 }}
                               >
                                 ↓
@@ -438,14 +462,14 @@ function App() {
                           <img
                             onClick={() => {
                               if (lockedBuild) {
-                                let newBuild = [...build];
+                                let newBuild = [...build]
                                 newBuild[backNumber].disabledCraftables![
                                   structureIndex
                                 ] =
                                   !newBuild[backNumber].disabledCraftables![
                                     structureIndex
-                                  ];
-                                setBuild(newBuild);
+                                  ]
+                                setBuild(newBuild)
                               }
                             }}
                             alt={structure}
@@ -456,15 +480,15 @@ function App() {
                             <select
                               style={centerStyle}
                               title={
-                                "edit-craftable-" +
+                                'edit-craftable-' +
                                 backNumber +
-                                "-" +
+                                '-' +
                                 structureIndex
                               }
                               name={
-                                "edit-craftable-" +
+                                'edit-craftable-' +
                                 backNumber +
-                                "-" +
+                                '-' +
                                 structureIndex
                               }
                               value={structure}
@@ -474,7 +498,7 @@ function App() {
                                     backNumber,
                                     structureIndex,
                                     e.target.value
-                                  );
+                                  )
                               }}
                             >
                               {Object.keys(items)
@@ -488,56 +512,65 @@ function App() {
                                     >
                                       {itemName}
                                     </option>
-                                  );
+                                  )
                                 })}
                             </select>
                           ) : !back.disabledCraftables![structureIndex] ? (
-                            <div style={{ ...centerStyle, width: "100px" }}>
+                            <div
+                              style={{
+                                ...centerStyle,
+                                width: '100px'
+                              }}
+                            >
                               {structure}
                             </div>
                           ) : (
                             <s
                               style={{
                                 ...centerStyle,
-                                width: "100px",
-                                color: "red",
+                                width: '100px',
+                                color: 'red'
                               }}
                             >
                               {structure}
                             </s>
                           )}
-                          {typeof back.disabledCraftables !== "undefined" &&
+                          {typeof back.disabledCraftables !== 'undefined' &&
                             structureIndex < back.disabledCraftables.length &&
                             !lockedBuild && (
-                              <div style={{ display: "flex" }}>
+                              <div
+                                style={{
+                                  display: 'flex'
+                                }}
+                              >
                                 <input
                                   id={
-                                    "disable-craftable-" +
+                                    'disable-craftable-' +
                                     backNumber +
-                                    "-" +
+                                    '-' +
                                     structureIndex
                                   }
                                   style={centerStyle}
                                   onChange={() => {
-                                    let newBuild = [...build];
+                                    let newBuild = [...build]
                                     newBuild[backNumber].disabledCraftables![
                                       structureIndex
                                     ] =
                                       !newBuild[backNumber].disabledCraftables![
                                         structureIndex
-                                      ];
-                                    setBuild(newBuild);
+                                      ]
+                                    setBuild(newBuild)
                                   }}
-                                  type={"checkbox"}
+                                  type={'checkbox'}
                                   checked={
                                     back.disabledCraftables[structureIndex]
                                   }
                                 ></input>
                                 <label
                                   htmlFor={
-                                    "disable-craftable-" +
+                                    'disable-craftable-' +
                                     backNumber +
-                                    "-" +
+                                    '-' +
                                     structureIndex
                                   }
                                   style={centerStyle}
@@ -548,7 +581,7 @@ function App() {
                                   style={centerStyle}
                                   type="button"
                                   onClick={() => {
-                                    addCraftable(backNumber, structure);
+                                    addCraftable(backNumber, structure)
                                   }}
                                 >
                                   Duplicate
@@ -556,22 +589,22 @@ function App() {
                               </div>
                             )}
                         </div>
-                      );
+                      )
                     })}
                     {!lockedBuild && (
                       <>
                         <label>Add craftable:</label>
                         {!searchMode[backNumber] && (
                           <select
-                            name={"add-craftable-" + backNumber}
-                            title={"add-craftable-" + backNumber}
+                            name={'add-craftable-' + backNumber}
+                            title={'add-craftable-' + backNumber}
                             onChange={(e) => {
-                              if (e.target.value !== "")
-                                addCraftable(backNumber, e.target.value);
+                              if (e.target.value !== '')
+                                addCraftable(backNumber, e.target.value)
                             }}
-                            value={""}
+                            value={''}
                           >
-                            <option value={""}></option>
+                            <option value={''}></option>
                             {Object.keys(items)
                               .sort()
                               .map((itemName, itemIndex) => {
@@ -582,7 +615,7 @@ function App() {
                                   >
                                     {itemName}
                                   </option>
-                                );
+                                )
                               })}
                           </select>
                         )}
@@ -592,9 +625,9 @@ function App() {
                               placeholder="Search item name here..."
                               value={searchTerms[backNumber]}
                               onChange={(e) => {
-                                let newSearchTerm = [...searchTerms];
-                                newSearchTerm[backNumber] = e.target.value;
-                                setSearchTerms(newSearchTerm);
+                                let newSearchTerm = [...searchTerms]
+                                newSearchTerm[backNumber] = e.target.value
+                                setSearchTerms(newSearchTerm)
                               }}
                             ></input>
                             <div>
@@ -610,47 +643,49 @@ function App() {
                                     return (
                                       <button
                                         onClick={() => {
-                                          addCraftable(backNumber, itemName);
+                                          addCraftable(backNumber, itemName)
                                         }}
                                       >
                                         {itemName}
                                       </button>
-                                    );
+                                    )
                                   }
-                                  return null;
+                                  return null
                                 })}
                             </div>
                           </div>
                         )}
                         <input
                           id={`searchmode-${backNumber}`}
-                          type={"checkbox"}
+                          type={'checkbox'}
                           onChange={() => {
-                            let newSearchMode = [...searchMode];
+                            let newSearchMode = [...searchMode]
                             newSearchMode[backNumber] =
-                              !newSearchMode[backNumber];
-                            setSearchMode(newSearchMode);
+                              !newSearchMode[backNumber]
+                            setSearchMode(newSearchMode)
                           }}
                           checked={searchMode[backNumber]}
                         ></input>
                         <label htmlFor={`searchmode-${backNumber}`}>
                           {searchMode[backNumber]
-                            ? "Uncheck for dropdown mode"
-                            : "Check for text search mode"}
+                            ? 'Uncheck for dropdown mode'
+                            : 'Check for text search mode'}
                         </label>
                       </>
                     )}
                     <div>
-                      {typeof back.note !== "undefined" && (
+                      {typeof back.note !== 'undefined' && (
                         <div>
                           <textarea
                             rows={4}
-                            style={{ width: "100%" }}
+                            style={{
+                              width: '100%'
+                            }}
                             onChange={(e) => {
                               if (!lockedBuild) {
-                                let newBuild = [...build];
-                                newBuild[backNumber].note = e.target.value;
-                                setBuild(newBuild);
+                                let newBuild = [...build]
+                                newBuild[backNumber].note = e.target.value
+                                setBuild(newBuild)
                               }
                             }}
                             value={back.note}
@@ -660,23 +695,23 @@ function App() {
                       {!lockedBuild && (
                         <button
                           onClick={() => {
-                            let newBuild = [...build];
-                            if (typeof back.note === "undefined") {
-                              newBuild[backNumber].note = "";
+                            let newBuild = [...build]
+                            if (typeof back.note === 'undefined') {
+                              newBuild[backNumber].note = ''
                             } else {
-                              delete newBuild[backNumber].note;
+                              delete newBuild[backNumber].note
                             }
-                            setBuild(newBuild);
+                            setBuild(newBuild)
                           }}
                         >
-                          {typeof back.note !== "undefined"
-                            ? "Delete Note"
-                            : "Add Note"}
+                          {typeof back.note !== 'undefined'
+                            ? 'Delete Note'
+                            : 'Add Note'}
                         </button>
                       )}
                     </div>
                   </div>
-                  <div style={{ marginLeft: "2rem" }}>
+                  <div style={{ marginLeft: '2rem' }}>
                     <h2>Back #{backNumber + 1} raw material:</h2>
                     {Object.entries(
                       getRawMaterials(back.craftables, back.disabledCraftables!)
@@ -686,9 +721,9 @@ function App() {
                           <div
                             key={`${backNumber}_raw_${rawMaterialIndex}`}
                             style={{
-                              display: "flex",
-                              marginTop: "0.2vh",
-                              marginBottom: "0.2vh",
+                              display: 'flex',
+                              marginTop: '0.2vh',
+                              marginBottom: '0.2vh'
                             }}
                           >
                             <img
@@ -698,7 +733,10 @@ function App() {
                             ></img>
                             {!minimalistMode ? (
                               <span
-                                style={{ ...centerStyle, marginLeft: "1vw" }}
+                                style={{
+                                  ...centerStyle,
+                                  marginLeft: '1vw'
+                                }}
                               >
                                 {count} {rawMaterial}
                               </span>
@@ -706,33 +744,33 @@ function App() {
                               <span
                                 style={{
                                   ...centerStyle,
-                                  marginLeft: "1vw",
-                                  fontSize: "2rem",
+                                  marginLeft: '1vw',
+                                  fontSize: '2rem'
                                 }}
                               >
                                 {count}
                               </span>
                             )}
                           </div>
-                        );
+                        )
                       } else {
-                        return null;
+                        return null
                       }
                     })}
                   </div>
-                  <div style={{ marginLeft: "2rem" }}>
+                  <div style={{ marginLeft: '2rem' }}>
                     <h2>
                       {showComposites[backNumber] &&
                         `Back #${backNumber + 1} composites: `}
                       <button
                         onClick={() => {
-                          let newShowComposites = [...showComposites];
+                          let newShowComposites = [...showComposites]
                           newShowComposites[backNumber] =
-                            !showComposites[backNumber];
-                          setShowComposites(newShowComposites);
+                            !showComposites[backNumber]
+                          setShowComposites(newShowComposites)
                         }}
                       >
-                        {showComposites[backNumber] ? "Hide" : "Show"}
+                        {showComposites[backNumber] ? 'Hide' : 'Show'}
                       </button>
                     </h2>
                     {showComposites[backNumber] &&
@@ -744,17 +782,18 @@ function App() {
                       ).map(([compositeType, composites], i) => {
                         if (Object.keys(composites).length !== 0)
                           return (
-                            <div key={"list-composites-" + i}>
+                            <div key={'list-composites-' + i}>
                               <h4>{compositeType}</h4>
                               {Object.entries(composites).map(
                                 ([rawMaterial, count], rawMaterialIndex) => {
+                                  if (count === 0) return null
                                   return (
                                     <div
                                       key={`${backNumber}_raw_${rawMaterialIndex}`}
                                       style={{
-                                        display: "flex",
-                                        marginTop: "0.2vh",
-                                        marginBottom: "0.2vh",
+                                        display: 'flex',
+                                        marginTop: '0.2vh',
+                                        marginBottom: '0.2vh'
                                       }}
                                     >
                                       <img
@@ -766,7 +805,7 @@ function App() {
                                         <span
                                           style={{
                                             ...centerStyle,
-                                            marginLeft: "1vw",
+                                            marginLeft: '1vw'
                                           }}
                                         >
                                           {count} {rawMaterial}
@@ -775,20 +814,20 @@ function App() {
                                         <span
                                           style={{
                                             ...centerStyle,
-                                            marginLeft: "1vw",
-                                            fontSize: "2rem",
+                                            marginLeft: '1vw',
+                                            fontSize: '2rem'
                                           }}
                                         >
                                           {count}
                                         </span>
                                       )}
                                     </div>
-                                  );
+                                  )
                                 }
                               )}
                             </div>
-                          );
-                        return null;
+                          )
+                        return null
                       })}
                   </div>
                 </div>
@@ -796,58 +835,58 @@ function App() {
                   <button
                     type="button"
                     onClick={() => {
-                      addBack(backNumber);
+                      addBack(backNumber)
                     }}
                   >
                     Add back HERE
                   </button>
                 )}
               </div>
-            );
+            )
           })}
         </div>
         {!lockedBuild && (
           <button
             onClick={() => {
-              addBack();
+              addBack()
             }}
           >
             Add back
           </button>
         )}
-        <div style={{ marginTop: "4vh" }}>
-          Made by Azuri (aka{" "}
+        <div style={{ marginTop: '4vh' }}>
+          Made by Azuri (aka{' '}
           <a
             target="_blank"
             rel="noreferrer"
             href="https://twitch.tv/AzurinDayo"
           >
             AzurinDayo
-          </a>{" "}
-          on Twitch,{" "}
+          </a>{' '}
+          on Twitch,{' '}
           <a
             target="_blank"
             rel="noreferrer"
             href="https://github.com/SLAzurin"
           >
             SLAzurin
-          </a>{" "}
-          on GitHub,{" "}
+          </a>{' '}
+          on GitHub,{' '}
           <a
             target="_blank"
             rel="noreferrer"
             href="https://www.reddit.com/user/Omnoloko/"
           >
             u/Omnoloko
-          </a>{" "}
+          </a>{' '}
           on Reddit)
         </div>
-        <div style={{ marginTop: "4vh" }}>
-          Special thanks to{" "}
+        <div style={{ marginTop: '4vh' }}>
+          Special thanks to{' '}
           <a target="_blank" rel="noreferrer" href="https://github.com/ulucs">
             ulucs
-          </a>{" "}
-          for adding the sub-composites{" "}
+          </a>{' '}
+          for adding the sub-composites{' '}
           <a
             target="_blank"
             rel="noreferrer"
@@ -857,17 +896,17 @@ function App() {
           </a>
           !
         </div>
-        <div style={{ marginTop: "2vh" }}>
+        <div style={{ marginTop: '2vh' }}>
           <h3>Import/Export your route:</h3>
           <p>{buildExportStrError}</p>
 
           {showImportRouteTextarea && (
             <textarea
               id="build-export-text-area"
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               rows={10}
               onChange={(e) => {
-                setBuildExportStr(e.target.value);
+                setBuildExportStr(e.target.value)
               }}
               placeholder="Copy paste a build export here..."
             ></textarea>
@@ -875,7 +914,7 @@ function App() {
           {!lockedBuild && (
             <button
               onClick={() => {
-                setShowImportRouteTextarea(!showImportRouteTextarea);
+                setShowImportRouteTextarea(!showImportRouteTextarea)
               }}
             >
               Import Route
@@ -888,10 +927,10 @@ function App() {
                 navigator.clipboard &&
                 navigator.clipboard.writeText
               ) {
-                navigator.clipboard.writeText(JSON.stringify(build));
-                alert("Copied build export to clipboard");
+                navigator.clipboard.writeText(JSON.stringify(build))
+                alert('Copied build export to clipboard')
               } else {
-                alert("FAILED to copy build export to clipboard");
+                alert('FAILED to copy build export to clipboard')
               }
             }}
           >
@@ -899,11 +938,11 @@ function App() {
           </button>
           <br />
           <br />
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {!lockedBuild && (
               <button
                 onClick={() => {
-                  setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2));
+                  setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2))
                 }}
               >
                 Import Mikeychain's Lazy 2.0 Route for Challenge Mode
@@ -915,18 +954,18 @@ function App() {
                 onClick={() => {
                   setBuildExportStr(
                     JSON.stringify(sampleBuildAzuriSurvivalArchitectL3)
-                  );
+                  )
                 }}
               >
-                Import Azuri's high upgrade points, EZCLAP and semi-overkill route
-                (must have survival architect L3)
+                Import Azuri's high upgrade points, EZCLAP and semi-overkill
+                route (must have survival architect L3)
               </button>
             )}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
