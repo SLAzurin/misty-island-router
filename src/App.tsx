@@ -242,6 +242,9 @@ function App() {
       <h1>Misty Island Router</h1>
       <h3>
         <span style={{ color: 'red' }}>NEW! </span>
+        I added Chapter 1 and 2 sample builds. Import them at the bottom of this page!
+      </h3>
+      <h3>
         I added Mikeychain's Challenge Mode Lazy build 2.0 as a build template.
         <br />
         Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
