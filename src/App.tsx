@@ -4,6 +4,7 @@ import {
   sampleBuildAzuriSurvivalArchitectL3,
   sampleBuildMikeychainV2,
   sampleBuildCh1,
+  sampleBuildCh2
 } from './data'
 import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
 
@@ -241,8 +242,7 @@ function App() {
       <h1>Misty Island Router</h1>
       <h3>
         <span style={{ color: 'red' }}>NEW! </span>
-        I added Mikeychain's Challenge Mode Lazy build 2.0 as a build
-        template.
+        I added Mikeychain's Challenge Mode Lazy build 2.0 as a build template.
         <br />
         Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
         for Challenge Mode".
@@ -272,7 +272,6 @@ function App() {
         Thanks for using this tool.
         <br />
         -Azuri
-
       </h3>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
@@ -936,17 +935,29 @@ function App() {
           </button>
           <br />
           <br />
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {!lockedBuild && (
               <button
                 onClick={() => {
-                  setBuildExportStr(
-                    JSON.stringify(sampleBuildCh1)
-                  )
+                  setBuildExportStr(JSON.stringify(sampleBuildCh1))
                 }}
               >
                 Import Azuri's Chapter 1 build
               </button>
             )}
+          </div>
+          <br />
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {!lockedBuild && (
+              <button
+                onClick={() => {
+                  setBuildExportStr(JSON.stringify(sampleBuildCh2))
+                }}
+              >
+                Import Azuri's Chapter 2 build
+              </button>
+            )}
+          </div>
           <br />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {!lockedBuild && (
@@ -955,7 +966,7 @@ function App() {
                   setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2))
                 }}
               >
-                Import Mikeychain's Lazy 2.0 Route for Challenge Mode
+                Import Mikeychain's Lazy 2.0 Route for Chapter 3 / Challenge Mode
               </button>
             )}
             <br />
@@ -968,7 +979,7 @@ function App() {
                 }}
               >
                 Import Azuri's high upgrade points, EZCLAP and semi-overkill
-                route (must have survival architect L3)
+                route (survival architect L3 required)
               </button>
             )}
           </div>

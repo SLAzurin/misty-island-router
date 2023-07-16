@@ -8,41 +8,9 @@ export const sampleBuildCh1: {
 
 export const sampleBuildCh2: {
     craftables: string[];
+    disabledCraftables?: boolean[],
     note?: string;
-}[] = [
-        {
-            craftables: [
-                "Survival Worktable",
-                "Rainwater Filter",
-                "Steel Pickaxe",
-                "Iron Sword",
-            ]
-        },
-        {
-            craftables: [
-                "Industrial Worktable",
-                "Countertop",
-                "Golden Decorative Hammer",
-                "Golden Pickaxe",
-                "Golden Axe",
-                "Rope Sandals",
-                "Empty Bucket",
-                "Leaves Bag",
-                "Leaves Bag"
-            ]
-        },
-        {
-            craftables: [
-                "Engineering Worktable",
-                "Alchemy Pot",
-                "Hand Cannon",
-                "Heavy Armor Battle Suit",
-                "Steel Helmet",
-                "Leather Bag",
-                "Life Force Recovery Potion (L)",
-            ]
-        },
-    ]
+}[] = [{"craftables":["Survival Worktable","Rainwater Filter","Steel Pickaxe","Iron Sword"],"disabledCraftables":[false,false,false,false],"note":"Use survival architect level 1 (or manually craft stone axe and pickaxe)"},{"craftables":["Industrial Worktable","Golden Decorative Hammer","Golden Pickaxe","Golden Axe","Leaves Bag","Leaves Bag"],"disabledCraftables":[false,false,false,false,false,true],"note":"Feel free to make more leaves bags. (I recommend up to 2 total)"},{"craftables":["Engineering Worktable","Alchemy Pot","Hand Cannon","Heavy Armor Battle Suit","Steel Helmet","Leather Bag"],"disabledCraftables":[false,false,false,false,false,false]},{"craftables":["Advanced Stone Wall","Advanced Stone Wall","Advanced Stone Wall","Advanced Stone Wall"],"disabledCraftables":[false,false,false,false]},{"craftables":["Life Force Recovery Potion (L)","Life Force Recovery Potion (L)"],"disabledCraftables":[false,true],"note":"Backup potion(s) in case night bosses get crazy"}]
 
 // Misty Island CHALLENGE MODE LAZY 2.0 BUILD (NO DUAL BOWGUNS!) https://www.youtube.com/watch?v=MVMTjHSZIZY
 export const sampleBuildMikeychainV2: {
