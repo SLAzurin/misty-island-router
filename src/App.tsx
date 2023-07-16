@@ -307,7 +307,9 @@ function App() {
                   This hides all add/remove buttons.
                   <br />
                   When the build is locked, click on the image to mark item as
-                  disabled.
+                  crafted.
+                  <br />
+                  Raw materials will not be shown for crafted items.
                 </p>
                 <span>
                   <h2>
@@ -344,7 +346,7 @@ function App() {
 
             {!lockedBuild && (
               <div style={{ display: 'flex' }}>
-                <h2>Total resources usage (not counting disabled ones):</h2>
+                <h2>Total resources usage (not counting crafted ones):</h2>
                 <button
                   style={{
                     ...centerStyle,
@@ -575,7 +577,7 @@ function App() {
                                   }
                                   style={centerStyle}
                                 >
-                                  Disable
+                                  Mark as Crafted
                                 </label>
                                 <button
                                   style={centerStyle}
