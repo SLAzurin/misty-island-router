@@ -237,18 +237,10 @@ function App() {
 
   return (
     <div style={{ marginBottom: '20vh' }}>
-      <h1>Big warning:</h1>
+      <h1>Misty Island Router</h1>
       <h3>
-        <br />
-        If the app is in a spazzing state, refresh this webpage.
-        <br />
-        <br />
-        Please understand this website was made like a castle built overnight
-        without a solid foundation.
-        <br />
-        <br />
         <span style={{ color: 'red' }}>NEW! </span>
-        I recently added Mikeychain's Challenge Mode Lazy build 2.0 as a build
+        I added Mikeychain's Challenge Mode Lazy build 2.0 as a build
         template.
         <br />
         Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
@@ -276,7 +268,10 @@ function App() {
         .
         <br />
         <br />
-        Sorry for the inconvenience, and thanks for using this tool.
+        Thanks for using this tool.
+        <br />
+        -Azuri
+
       </h3>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
