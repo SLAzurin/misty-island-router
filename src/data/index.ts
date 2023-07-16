@@ -1,4 +1,11 @@
 export { items } from './items'
+
+export const sampleBuildCh1: {
+    craftables: string[];
+    disabledCraftables?: boolean[],
+    note?: string;
+}[] = [{"craftables":["Stone Axe","Stone Pickaxe"],"disabledCraftables":[false,false],"note":"Pickup from ground"},{"craftables":["Survival Worktable","Iron Sword"],"disabledCraftables":[false,false]},{"craftables":["Steel Pickaxe","Campfire for cooking","Rainwater Filter"],"disabledCraftables":[false,false,false]},{"craftables":["Industrial Worktable","Golden Pickaxe"],"disabledCraftables":[false,false]},{"craftables":["Golden Decorative Hammer"],"disabledCraftables":[false]},{"craftables":["Advanced Stone Wall","Advanced Stone Wall"],"disabledCraftables":[false,false]},{"craftables":["Golden Armor","Steel Helmet","Iron Plated Shoes","Golden Shoes"],"disabledCraftables":[false,false,false,true],"note":"Craft gold shoes instead of iron plated ones if you get 2 lizardman skins. Requires 6 extra gold nuggets"}]
+
 export const sampleBuildCh2: {
     craftables: string[];
     note?: string;

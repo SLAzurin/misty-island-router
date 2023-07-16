@@ -2,7 +2,8 @@ import { CSSProperties, useEffect, useState } from 'react'
 import {
   items,
   sampleBuildAzuriSurvivalArchitectL3,
-  sampleBuildMikeychainV2
+  sampleBuildMikeychainV2,
+  sampleBuildCh1,
 } from './data'
 import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
 
@@ -934,6 +935,18 @@ function App() {
             Export Route to clipboard
           </button>
           <br />
+          <br />
+            {!lockedBuild && (
+              <button
+                onClick={() => {
+                  setBuildExportStr(
+                    JSON.stringify(sampleBuildCh1)
+                  )
+                }}
+              >
+                Import Azuri's Chapter 1 build
+              </button>
+            )}
           <br />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {!lockedBuild && (
