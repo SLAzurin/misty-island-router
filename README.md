@@ -8,3 +8,13 @@ yarn
 yarn start
 yarn build
 ```
+
+Deploying to pages:
+```
+yarn build
+git checkout pages
+rm -r static asset-manifest.json index.html robots.txt
+cp -r build/* .
+git commit -am "update new version $(date +"%Y-%m-%d %T %Z")"
+git push origin pages
+```
