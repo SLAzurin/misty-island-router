@@ -241,8 +241,32 @@ function App() {
     <div style={{ marginBottom: '20vh' }}>
       <h1>Misty Island Router</h1>
       <h3>
-        <span style={{ color: 'red' }}>NEW! </span>
-        I added Chapter 1 and 2 sample builds. Import them at the bottom of this page!
+        <span style={{ color: 'red' }}>NEW! </span>I uploaded a video to follow
+        along
+        <br />
+        Links:{' '}
+        <a
+          target={'_blank'}
+          rel={'noreferrer'}
+          href="https://www.youtube.com/watch?v=470ALtqXX8I"
+        >
+          Chapter 1
+        </a>
+        ,{' '}
+        <a
+          target={'_blank'}
+          rel={'noreferrer'}
+          href="https://www.youtube.com/watch?v=5M5xjfaRLT8"
+        >
+          Chapter 2
+        </a>
+        .<br />
+        Check them out if you having difficulty using the build template below!
+      </h3>
+      <h3>
+        I added Chapter 1 and 2 sample builds.
+        <br />
+        Import them below the visual options!
       </h3>
       <h3>
         I added Mikeychain's Challenge Mode Lazy build 2.0 as a build template.
@@ -272,7 +296,7 @@ function App() {
         .
         <br />
         <br />
-        Thanks for using this tool.
+        Thanks for using my tool!
         <br />
         -Azuri
       </h3>
@@ -340,6 +364,57 @@ function App() {
                   materials, and makes the number bigger in size.
                 </p>
               </span>
+            </div>
+
+            <h2>Import pre-made builds:</h2>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!lockedBuild && (
+                <button
+                  onClick={() => {
+                    setBuildExportStr(JSON.stringify(sampleBuildCh1))
+                  }}
+                >
+                  Import Azuri's Chapter 1 build
+                </button>
+              )}
+            </div>
+            <br />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!lockedBuild && (
+                <button
+                  onClick={() => {
+                    setBuildExportStr(JSON.stringify(sampleBuildCh2))
+                  }}
+                >
+                  Import Azuri's Chapter 2 build
+                </button>
+              )}
+            </div>
+            <br />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!lockedBuild && (
+                <button
+                  onClick={() => {
+                    setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2))
+                  }}
+                >
+                  Import Mikeychain's Lazy 2.0 Route for Chapter 3 / Challenge
+                  Mode
+                </button>
+              )}
+              <br />
+              {!lockedBuild && (
+                <button
+                  onClick={() => {
+                    setBuildExportStr(
+                      JSON.stringify(sampleBuildAzuriSurvivalArchitectL3)
+                    )
+                  }}
+                >
+                  Import Azuri's high upgrade points, EZCLAP and semi-overkill
+                  route (survival architect L3 required)
+                </button>
+              )}
             </div>
 
             {!lockedBuild && (
@@ -937,55 +1012,6 @@ function App() {
             Export Route to clipboard
           </button>
           <br />
-          <br />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {!lockedBuild && (
-              <button
-                onClick={() => {
-                  setBuildExportStr(JSON.stringify(sampleBuildCh1))
-                }}
-              >
-                Import Azuri's Chapter 1 build
-              </button>
-            )}
-          </div>
-          <br />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {!lockedBuild && (
-              <button
-                onClick={() => {
-                  setBuildExportStr(JSON.stringify(sampleBuildCh2))
-                }}
-              >
-                Import Azuri's Chapter 2 build
-              </button>
-            )}
-          </div>
-          <br />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {!lockedBuild && (
-              <button
-                onClick={() => {
-                  setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2))
-                }}
-              >
-                Import Mikeychain's Lazy 2.0 Route for Chapter 3 / Challenge Mode
-              </button>
-            )}
-            <br />
-            {!lockedBuild && (
-              <button
-                onClick={() => {
-                  setBuildExportStr(
-                    JSON.stringify(sampleBuildAzuriSurvivalArchitectL3)
-                  )
-                }}
-              >
-                Import Azuri's high upgrade points, EZCLAP and semi-overkill
-                route (survival architect L3 required)
-              </button>
-            )}
-          </div>
         </div>
       </div>
     </div>
