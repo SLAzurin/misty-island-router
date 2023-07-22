@@ -237,6 +237,33 @@ function App() {
     localStorage.setItem('mistyislandbuild', JSON.stringify(build))
   }, [build])
 
+  useEffect(() => {
+    const statsServerHostEndpoint = process.env.REACT_APP_STATISTICS_URL ?? ""
+    // const statsServerHostEndpoint = 'http://localhost:8080/misty/statistics/add'
+    let statistics_id = localStorage.getItem('statistics_id')
+    ;(statistics_id == null
+      ? fetch(statsServerHostEndpoint, {
+          method: 'GET'
+        }).then((r) => {
+          if (!r.ok) throw new Error('Failed to contact statistics server')
+          return r.json() as Promise<{ token: string }>
+        })
+      : Promise.resolve<{ token: string }>({ token: statistics_id })
+    ).then((r) => {
+      if (statistics_id == null) localStorage.setItem('statistics_id', r.token)
+      fetch(statsServerHostEndpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + r.token
+        }
+      }).then((r) => {
+        if (r.ok) {
+          if (!r.ok) throw new Error('Failed to contact statistics server')
+        }
+      })
+    })
+  }, [])
+
   return (
     <div style={{ marginBottom: '20vh' }}>
       <h1>Misty Island Router</h1>

@@ -1,0 +1,33 @@
+version: "2.4"
+
+services:
+  # For prod deployment old school style
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   environment:
+  #     - GIN_MODE=release
+  #   ports:
+  #     - 0.0.0.0:8082:8080
+  
+  # For development
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - misty_pg_data:/var/lib/postgresql/data
+      - ./sqlfiles:/root/sqlfiles
+    restart: unless-stopped
+    env_file:
+      - psql.env
+    ports:
+      - 5434:5432
+
+volumes:
+  misty_pg_data:
+    driver: local
+    driver_opts:
+      device: tmpfs
+      type: tmpfs
+      o: "size=1G"
