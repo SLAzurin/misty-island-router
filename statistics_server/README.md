@@ -11,3 +11,8 @@ fly launch
 fly deploy
 # make sure you create postgres and set your secrets
 ```
+
+View stats:
+```sql
+SELECT id, COUNT(id), TIMEZONE('America/New_York', MAX(dt)) AS last_visit FROM visits GROUP BY id;
+```
