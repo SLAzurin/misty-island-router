@@ -14,5 +14,8 @@ fly deploy
 
 View stats:
 ```sql
+-- Get all unique visitors, the amount of times they went to my website, and when was the last time they connected
 SELECT id, COUNT(id), TIMEZONE('America/New_York', MAX(dt)) AS last_visit FROM visits GROUP BY id;
+-- Get number of unique visitors.
+SELECT COUNT(DISTINCT(id)) FROM visits;
 ```
