@@ -7,6 +7,12 @@ import {
   sampleBuildCh2
 } from './data'
 import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
+import Alert from 'react-bootstrap/Alert'
+import Button from 'react-bootstrap/Button'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+const currentBuildsVersion = 1690148496 * 1000
+const defaultSpacing = 'mt-3 mb-3'
 
 interface IBuild {
   craftables: string[]
@@ -106,6 +112,9 @@ function App() {
         )
       : sampleBuildMikeychainV2
   )
+  const [buildsVersion, setBuildsVersion] = useState<Number>(
+    Number(localStorage.getItem('buildsVersion') ?? '0')
+  )
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build))
   const [buildExportStrError, setBuildExportStrError] = useState('')
   const [showComposites, setShowComposites] = useState<boolean[]>([])
@@ -120,6 +129,10 @@ function App() {
   const [lockedBuild, setLockedBuild] = useState(false)
   const [assetSize, setAssetSize] = useState(3)
   const [minimalistMode, setMinimalistMode] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('buildsVersion', buildsVersion.toString())
+  }, [buildsVersion])
 
   const addBack = (afterBackNumber?: number) => {
     let newBuild = [...build]
@@ -238,7 +251,7 @@ function App() {
   }, [build])
 
   useEffect(() => {
-    const statsServerHostEndpoint = process.env.REACT_APP_STATISTICS_URL ?? ""
+    const statsServerHostEndpoint = process.env.REACT_APP_STATISTICS_URL ?? ''
     // const statsServerHostEndpoint = 'http://localhost:8080/misty/statistics/add'
     let statistics_id = localStorage.getItem('statistics_id')
     ;(statistics_id == null
@@ -266,10 +279,13 @@ function App() {
 
   return (
     <div style={{ marginBottom: '20vh' }}>
-      <h1>Misty Island Router</h1>
-      <h3>
-        <span style={{ color: 'red' }}>NEW! </span>I uploaded a video to follow
-        along
+      <h1 className={defaultSpacing}>Misty Island Router</h1>
+      <h5 className={defaultSpacing}>
+        <span style={{ color: 'red' }}>NEW! </span>I revamped the website's
+        colors!
+      </h5>
+      <h5 className={defaultSpacing}>
+        I uploaded a video to follow along
         <br />
         Links:{' '}
         <a
@@ -289,13 +305,13 @@ function App() {
         </a>
         .<br />
         Check them out if you having difficulty using the build template below!
-      </h3>
-      <h3>
+      </h5>
+      <h5 className={defaultSpacing}>
         I added Chapter 1 and 2 sample builds.
         <br />
         Import them below the visual options!
-      </h3>
-      <h3>
+      </h5>
+      <h5 className={defaultSpacing}>
         I added Mikeychain's Challenge Mode Lazy build 2.0 as a build template.
         <br />
         Scroll all the way down and click on "Import Mikeychain's Lazy 2.0 Route
@@ -326,20 +342,21 @@ function App() {
         Thanks for using my tool!
         <br />
         -Azuri
-      </h3>
+      </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
-          <div>
+          <div className={defaultSpacing}>
             <div style={{ display: 'flex' }}>
               <span>
-                <h2>Options:</h2>
-                <h4>
-                  Tip: If you're on mobile, use `Lock build` and make your icons
-                  larger!
-                </h4>
+                <h2>Options: </h2>
+                <Alert variant="success">
+                  Tip: If you're on mobile, use `Lock build`, `Minimalist mode`
+                  and make your icons larger!
+                </Alert>
                 <h2>
                   Lock build:{' '}
-                  <button
+                  <Button
+                    variant={lockedBuild ? 'danger' : 'success'}
                     style={{
                       ...centerStyle,
                       marginLeft: '1vw'
@@ -350,7 +367,7 @@ function App() {
                     }}
                   >
                     {lockedBuild ? 'Unlock build' : 'Lock Build'}
-                  </button>
+                  </Button>
                 </h2>
                 <p>
                   This hides all add/remove buttons.
@@ -377,14 +394,15 @@ function App() {
                 </span>
                 <h2>
                   Minimalist mode:{' '}
-                  <button
+                  <Button
+                    variant={minimalistMode ? 'danger' : 'success'}
                     type="button"
                     onClick={() => {
                       setMinimalistMode(!minimalistMode)
                     }}
                   >
                     {minimalistMode ? 'Disable' : 'Enable'}
-                  </button>
+                  </Button>
                 </h2>
                 <p>
                   This hides item names from raw materials, and composite
@@ -394,44 +412,63 @@ function App() {
             </div>
 
             <h2>Import pre-made builds:</h2>
+
+            {currentBuildsVersion !== buildsVersion && (
+              <Alert
+                variant="primary"
+                onClose={() => setBuildsVersion(currentBuildsVersion)}
+                dismissible
+              >
+                <Alert.Heading>
+                  Builds were updated on{' '}
+                  {new Date(currentBuildsVersion).toLocaleString()} (your
+                  timezone)
+                </Alert.Heading>
+                Please re-import if you were using one of the following builds.
+              </Alert>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {!lockedBuild && (
-                <button
+                <Button
+                  variant="secondary"
                   onClick={() => {
                     setBuildExportStr(JSON.stringify(sampleBuildCh1))
                   }}
                 >
                   Import Azuri's Chapter 1 build
-                </button>
+                </Button>
               )}
             </div>
             <br />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {!lockedBuild && (
-                <button
+                <Button
+                  variant="secondary"
                   onClick={() => {
                     setBuildExportStr(JSON.stringify(sampleBuildCh2))
                   }}
                 >
                   Import Azuri's Chapter 2 build
-                </button>
+                </Button>
               )}
             </div>
             <br />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {!lockedBuild && (
-                <button
+                <Button
+                  variant="secondary"
                   onClick={() => {
                     setBuildExportStr(JSON.stringify(sampleBuildMikeychainV2))
                   }}
                 >
                   Import Mikeychain's Lazy 2.0 Route for Chapter 3 / Challenge
                   Mode
-                </button>
+                </Button>
               )}
               <br />
               {!lockedBuild && (
-                <button
+                <Button
+                  variant="secondary"
                   onClick={() => {
                     setBuildExportStr(
                       JSON.stringify(sampleBuildAzuriSurvivalArchitectL3)
@@ -440,14 +477,15 @@ function App() {
                 >
                   Import Azuri's high upgrade points, EZCLAP and semi-overkill
                   route (survival architect L3 required)
-                </button>
+                </Button>
               )}
             </div>
 
             {!lockedBuild && (
-              <div style={{ display: 'flex' }}>
+              <div className={defaultSpacing} style={{ display: 'flex' }}>
                 <h2>Total resources usage (not counting crafted ones):</h2>
-                <button
+                <Button
+                  variant={showTotalRawMaterials ? 'danger' : 'primary'}
                   style={{
                     ...centerStyle,
                     marginLeft: '1vw'
@@ -458,7 +496,7 @@ function App() {
                   }}
                 >
                   {showTotalRawMaterials ? 'Hide' : 'Click here to show'}
-                </button>
+                </Button>
               </div>
             )}
             {showTotalRawMaterials &&
@@ -499,19 +537,20 @@ function App() {
                   }}
                 >
                   <div>
-                    <h2>
+                    <h3>
                       Back #{backNumber + 1}{' '}
                       {!lockedBuild && (
-                        <button
+                        <Button
+                          variant="danger"
                           type="button"
                           onClick={() => {
                             deleteBack(backNumber)
                           }}
                         >
                           Delete
-                        </button>
+                        </Button>
                       )}
-                    </h2>
+                    </h3>
                     {back.craftables.map((structure, structureIndex) => {
                       return (
                         <div
@@ -522,10 +561,11 @@ function App() {
                         >
                           {!lockedBuild && (
                             <>
-                              <button
+                              <Button
+                                variant="light"
                                 type="button"
                                 style={{
-                                  width: '3vw'
+                                  minWidth: '3vw'
                                 }}
                                 disabled={structureIndex === 0}
                                 onClick={() => {
@@ -533,31 +573,33 @@ function App() {
                                 }}
                               >
                                 ↑
-                              </button>
-                              <button
+                              </Button>
+                              <Button
+                                variant="danger"
                                 type="button"
                                 onClick={() => {
                                   deleteCraftable(backNumber, structureIndex)
                                 }}
-                                style={centerStyle}
+                                style={{ ...centerStyle, minWidth: '5vw' }}
                               >
-                                Delete
-                              </button>
+                                x
+                              </Button>
 
-                              <button
+                              <Button
+                                variant="light"
                                 disabled={
                                   structureIndex === back.craftables.length - 1
                                 }
                                 type="button"
                                 style={{
-                                  width: '3vw'
+                                  minWidth: '3vw'
                                 }}
                                 onClick={() => {
                                   moveDown(backNumber, structureIndex)
                                 }}
                               >
                                 ↓
-                              </button>
+                              </Button>
                             </>
                           )}
 
@@ -679,7 +721,8 @@ function App() {
                                 >
                                   Mark as Crafted
                                 </label>
-                                <button
+                                <Button
+                                  variant="link"
                                   style={centerStyle}
                                   type="button"
                                   onClick={() => {
@@ -687,7 +730,7 @@ function App() {
                                   }}
                                 >
                                   Duplicate
-                                </button>
+                                </Button>
                               </div>
                             )}
                         </div>
@@ -743,13 +786,14 @@ function App() {
                                       )
                                   ) {
                                     return (
-                                      <button
+                                      <Button
+                                        variant="link"
                                         onClick={() => {
                                           addCraftable(backNumber, itemName)
                                         }}
                                       >
                                         {itemName}
-                                      </button>
+                                      </Button>
                                     )
                                   }
                                   return null
@@ -795,7 +839,12 @@ function App() {
                         </div>
                       )}
                       {!lockedBuild && (
-                        <button
+                        <Button
+                          variant={
+                            typeof back.note !== 'undefined'
+                              ? 'danger'
+                              : 'warning'
+                          }
                           onClick={() => {
                             let newBuild = [...build]
                             if (typeof back.note === 'undefined') {
@@ -809,12 +858,12 @@ function App() {
                           {typeof back.note !== 'undefined'
                             ? 'Delete Note'
                             : 'Add Note'}
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </div>
                   <div style={{ marginLeft: '2rem' }}>
-                    <h2>Back #{backNumber + 1} raw material:</h2>
+                    <h3>Back #{backNumber + 1} raw material:</h3>
                     {Object.entries(
                       getRawMaterials(back.craftables, back.disabledCraftables!)
                     ).map(([rawMaterial, count], rawMaterialIndex) => {
@@ -861,10 +910,13 @@ function App() {
                     })}
                   </div>
                   <div style={{ marginLeft: '2rem' }}>
-                    <h2>
+                    <h3>
                       {showComposites[backNumber] &&
                         `Back #${backNumber + 1} composites: `}
-                      <button
+                      <Button
+                        variant={
+                          showComposites[backNumber] ? 'secondary' : 'primary'
+                        }
                         onClick={() => {
                           let newShowComposites = [...showComposites]
                           newShowComposites[backNumber] =
@@ -873,8 +925,8 @@ function App() {
                         }}
                       >
                         {showComposites[backNumber] ? 'Hide' : 'Show'}
-                      </button>
-                    </h2>
+                      </Button>
+                    </h3>
                     {showComposites[backNumber] &&
                       Object.entries(
                         getCompositeMaterials(
@@ -934,27 +986,28 @@ function App() {
                   </div>
                 </div>
                 {!lockedBuild && (
-                  <button
+                  <Button
+                    variant="success"
                     type="button"
                     onClick={() => {
                       addBack(backNumber)
                     }}
                   >
                     Add back HERE
-                  </button>
+                  </Button>
                 )}
               </div>
             )
           })}
         </div>
         {!lockedBuild && (
-          <button
+          <Button
             onClick={() => {
               addBack()
             }}
           >
             Add back
-          </button>
+          </Button>
         )}
         <div style={{ marginTop: '4vh' }}>
           Made by Azuri (aka{' '}
@@ -1014,15 +1067,16 @@ function App() {
             ></textarea>
           )}
           {!lockedBuild && (
-            <button
+            <Button
+              variant="success"
               onClick={() => {
                 setShowImportRouteTextarea(!showImportRouteTextarea)
               }}
             >
               Import Route
-            </button>
+            </Button>
           )}
-          <button
+          <Button
             onClick={() => {
               if (
                 navigator &&
@@ -1037,7 +1091,7 @@ function App() {
             }}
           >
             Export Route to clipboard
-          </button>
+          </Button>
           <br />
         </div>
       </div>
