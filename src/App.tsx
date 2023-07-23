@@ -49,8 +49,8 @@ const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
   return allRawMaterials
 }
 
-const getAsset = (materialName: string): any => {
-  let resource: any = null
+const getAsset = (materialName: string): string => {
+  let resource: string = ''
   let filename = materialName
     .toLowerCase()
     .replaceAll(' ', '-')
@@ -72,9 +72,9 @@ const getAsset = (materialName: string): any => {
     filename = filename.substring(0, filename.length - 2)
   }
   try {
-    resource = require(`./assets/images/${filename}.png`)
+    resource = `./misty-island-router/images/${filename}.png`
   } catch (e: any) {
-    resource = require(`./assets/images/notfound.png`)
+    resource = `./misty-island-router/images/notfound.png`
   }
   return resource
 }
