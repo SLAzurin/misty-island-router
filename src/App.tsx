@@ -72,9 +72,9 @@ const getAsset = (materialName: string): string => {
     filename = filename.substring(0, filename.length - 2)
   }
   try {
-    resource = `./misty-island-router/images/${filename}.png`
+    resource = `misty-island-router/images/${filename}.png`
   } catch (e: any) {
-    resource = `./misty-island-router/images/notfound.png`
+    resource = `misty-island-router/images/notfound.png`
   }
   return resource
 }
