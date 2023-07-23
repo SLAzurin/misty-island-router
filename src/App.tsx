@@ -465,7 +465,9 @@ function App() {
                   Mode
                 </Button>
               )}
-              <br />
+            </div>
+            <br />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {!lockedBuild && (
                 <Button
                   variant="secondary"
