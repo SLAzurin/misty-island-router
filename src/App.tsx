@@ -32,11 +32,11 @@ const centerStyle: CSSProperties = {
 }
 
 const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
-  let allRawMaterials: {
+  const allRawMaterials: {
     [key: string]: number
   } = {}
   build.forEach((back, backBumber) => {
-    for (let [rawMaterial, count] of Object.entries(
+    for (const [rawMaterial, count] of Object.entries(
       getRawMaterials(
         back.craftables,
         build[backBumber].disabledCraftables as boolean[]
@@ -50,7 +50,7 @@ const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
 }
 
 const getAsset = (materialName: string): string => {
-  let resource: string = ''
+  let resource = ''
   let filename = materialName
     .toLowerCase()
     .replaceAll(' ', '-')
@@ -73,14 +73,14 @@ const getAsset = (materialName: string): string => {
   }
   try {
     resource = `images/${filename}.png`
-  } catch (e: any) {
+  } catch (e) {
     resource = `images/notfound.png`
   }
   return resource
 }
 
 const fixPreviouslyBrokenItems = (build: IBuild[]) => {
-  let newBuild = [...build]
+  const newBuild = [...build]
   for (let i = 0; i < newBuild.length; i++) {
     for (let j = 0; j < newBuild[i].craftables.length; j++) {
       if (newBuild[i].craftables[j] === 'Bow :1,	Iron') {
@@ -112,7 +112,7 @@ function App() {
         )
       : sampleBuildMikeychainV2
   )
-  const [buildsVersion, setBuildsVersion] = useState<Number>(
+  const [buildsVersion, setBuildsVersion] = useState<number>(
     Number(localStorage.getItem('buildsVersion') ?? '0')
   )
   const [buildExportStr, setBuildExportStr] = useState(JSON.stringify(build))
@@ -135,7 +135,7 @@ function App() {
   }, [buildsVersion])
 
   const addBack = (afterBackNumber?: number) => {
-    let newBuild = [...build]
+    const newBuild = [...build]
     if (typeof afterBackNumber !== 'undefined') {
       newBuild.splice(afterBackNumber + 1, 0, {
         craftables: [],
@@ -148,26 +148,22 @@ function App() {
   }
 
   const deleteBack = (backNummber: number) => {
-    let newBuild = [...build]
+    const newBuild = [...build]
     newBuild.splice(backNummber, 1)
     setBuild(newBuild)
   }
 
   const addCraftable = (backNumber: number, craftableName: string) => {
-    let newBuild = [...build]
+    const newBuild = [...build]
     newBuild[backNumber].craftables.push(craftableName)
-    if (typeof newBuild[backNumber].disabledCraftables !== 'undefined') {
-      newBuild[backNumber].disabledCraftables!.push(false)
-    }
+    newBuild[backNumber].disabledCraftables?.push(false)
     setBuild(newBuild)
   }
 
   const deleteCraftable = (backNumber: number, craftableIndex: number) => {
-    let newBuild = [...build]
+    const newBuild = [...build]
     newBuild[backNumber].craftables.splice(craftableIndex, 1)
-    if (typeof newBuild[backNumber].disabledCraftables !== 'undefined') {
-      newBuild[backNumber].disabledCraftables!.splice(craftableIndex, 1)
-    }
+    newBuild[backNumber].disabledCraftables?.splice(craftableIndex, 1)
     setBuild(newBuild)
   }
 
@@ -176,35 +172,41 @@ function App() {
     craftableIndex: number,
     craftableName: string
   ) => {
-    let newBuild = [...build]
+    const newBuild = [...build]
     newBuild[backNumber].craftables[craftableIndex] = craftableName
     setBuild(newBuild)
   }
 
   const moveUp = (backNumber: number, craftableIndex: number) => {
-    let newBuild = [...build]
-    let temp = newBuild[backNumber].craftables[craftableIndex - 1]
-    let tempDisabled =
-      newBuild[backNumber].disabledCraftables![craftableIndex - 1]
+    const newBuild = [...build]
+    const temp = newBuild[backNumber].craftables[craftableIndex - 1]
+    const tempDisabled = (newBuild[backNumber].disabledCraftables as boolean[])[
+      craftableIndex - 1
+    ]
     newBuild[backNumber].craftables[craftableIndex - 1] =
       newBuild[backNumber].craftables[craftableIndex]
     newBuild[backNumber].craftables[craftableIndex] = temp
-    newBuild[backNumber].disabledCraftables![craftableIndex - 1] =
-      newBuild[backNumber].disabledCraftables![craftableIndex]
-    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled
+    ;(newBuild[backNumber].disabledCraftables as boolean[])[
+      craftableIndex - 1
+    ] = (newBuild[backNumber].disabledCraftables as boolean[])[craftableIndex]
+    ;(newBuild[backNumber].disabledCraftables as boolean[])[craftableIndex] =
+      tempDisabled
     setBuild(newBuild)
   }
   const moveDown = (backNumber: number, craftableIndex: number) => {
-    let newBuild = [...build]
-    let temp = newBuild[backNumber].craftables[craftableIndex + 1]
-    let tempDisabled =
-      newBuild[backNumber].disabledCraftables![craftableIndex + 1]
+    const newBuild = [...build]
+    const temp = newBuild[backNumber].craftables[craftableIndex + 1]
+    const tempDisabled = (newBuild[backNumber].disabledCraftables as boolean[])[
+      craftableIndex + 1
+    ]
     newBuild[backNumber].craftables[craftableIndex + 1] =
       newBuild[backNumber].craftables[craftableIndex]
     newBuild[backNumber].craftables[craftableIndex] = temp
-    newBuild[backNumber].disabledCraftables![craftableIndex + 1] =
-      newBuild[backNumber].disabledCraftables![craftableIndex]
-    newBuild[backNumber].disabledCraftables![craftableIndex] = tempDisabled
+    ;(newBuild[backNumber].disabledCraftables as boolean[])[
+      craftableIndex + 1
+    ] = (newBuild[backNumber].disabledCraftables as boolean[])[craftableIndex]
+    ;(newBuild[backNumber].disabledCraftables as boolean[])[craftableIndex] =
+      tempDisabled
     setBuild(newBuild)
   }
 
@@ -219,10 +221,12 @@ function App() {
 
     try {
       newBuild.forEach((back) => {
-        getRawMaterials(back.craftables, back.disabledCraftables!)
+        getRawMaterials(back.craftables, back.disabledCraftables as boolean[])
       })
-    } catch (e: any) {
-      setBuildExportStrError(e.toString())
+    } catch (e) {
+      setBuildExportStrError(
+        e instanceof Error ? e.toString() : 'Something is broken.'
+      )
       return
     }
 
@@ -233,7 +237,7 @@ function App() {
       ) {
         newBuild[i].disabledCraftables = []
         back.craftables.forEach(() => {
-          newBuild[i].disabledCraftables!.push(false)
+          newBuild[i].disabledCraftables?.push(false)
         })
       }
     })
@@ -251,9 +255,10 @@ function App() {
   }, [build])
 
   useEffect(() => {
-    const statsServerHostEndpoint = process.env.REACT_APP_STATISTICS_URL ?? ''
+    const statsServerHostEndpoint = import.meta.env.VITE_STATISTICS_URL ?? ''
     // const statsServerHostEndpoint = 'http://localhost:8080/misty/statistics/add'
-    let statistics_id = localStorage.getItem('statistics_id')
+    if (statsServerHostEndpoint === '') return
+    const statistics_id = localStorage.getItem('statistics_id')
     ;(statistics_id == null
       ? fetch(statsServerHostEndpoint, {
           method: 'GET'
@@ -607,14 +612,20 @@ function App() {
 
                           <img
                             onClick={() => {
-                              if (lockedBuild) {
-                                let newBuild = [...build]
-                                newBuild[backNumber].disabledCraftables![
-                                  structureIndex
-                                ] =
-                                  !newBuild[backNumber].disabledCraftables![
-                                    structureIndex
-                                  ]
+                              if (
+                                lockedBuild &&
+                                typeof back.disabledCraftables !==
+                                  'undefined' &&
+                                structureIndex < back.disabledCraftables.length
+                              ) {
+                                const newBuild = [...build]
+                                ;(
+                                  newBuild[backNumber]
+                                    .disabledCraftables as boolean[]
+                                )[structureIndex] = !(
+                                  newBuild[backNumber]
+                                    .disabledCraftables as boolean[]
+                                )[structureIndex]
                                 setBuild(newBuild)
                               }
                             }}
@@ -661,7 +672,9 @@ function App() {
                                   )
                                 })}
                             </select>
-                          ) : !back.disabledCraftables![structureIndex] ? (
+                          ) : !(back.disabledCraftables as boolean[])[
+                              structureIndex
+                            ] ? (
                             <div
                               style={{
                                 ...centerStyle,
@@ -698,13 +711,14 @@ function App() {
                                   }
                                   style={centerStyle}
                                   onChange={() => {
-                                    let newBuild = [...build]
-                                    newBuild[backNumber].disabledCraftables![
-                                      structureIndex
-                                    ] =
-                                      !newBuild[backNumber].disabledCraftables![
-                                        structureIndex
-                                      ]
+                                    const newBuild = [...build]
+                                    ;(
+                                      newBuild[backNumber]
+                                        .disabledCraftables as boolean[]
+                                    )[structureIndex] = !(
+                                      newBuild[backNumber]
+                                        .disabledCraftables as boolean[]
+                                    )[structureIndex]
                                     setBuild(newBuild)
                                   }}
                                   type={'checkbox'}
@@ -772,7 +786,7 @@ function App() {
                               placeholder="Search item name here..."
                               value={searchTerms[backNumber]}
                               onChange={(e) => {
-                                let newSearchTerm = [...searchTerms]
+                                const newSearchTerm = [...searchTerms]
                                 newSearchTerm[backNumber] = e.target.value
                                 setSearchTerms(newSearchTerm)
                               }}
@@ -807,7 +821,7 @@ function App() {
                           id={`searchmode-${backNumber}`}
                           type={'checkbox'}
                           onChange={() => {
-                            let newSearchMode = [...searchMode]
+                            const newSearchMode = [...searchMode]
                             newSearchMode[backNumber] =
                               !newSearchMode[backNumber]
                             setSearchMode(newSearchMode)
@@ -831,7 +845,7 @@ function App() {
                             }}
                             onChange={(e) => {
                               if (!lockedBuild) {
-                                let newBuild = [...build]
+                                const newBuild = [...build]
                                 newBuild[backNumber].note = e.target.value
                                 setBuild(newBuild)
                               }
@@ -848,7 +862,7 @@ function App() {
                               : 'warning'
                           }
                           onClick={() => {
-                            let newBuild = [...build]
+                            const newBuild = [...build]
                             if (typeof back.note === 'undefined') {
                               newBuild[backNumber].note = ''
                             } else {
@@ -867,7 +881,10 @@ function App() {
                   <div style={{ marginLeft: '2rem' }}>
                     <h3>Back #{backNumber + 1} raw material:</h3>
                     {Object.entries(
-                      getRawMaterials(back.craftables, back.disabledCraftables!)
+                      getRawMaterials(
+                        back.craftables,
+                        back.disabledCraftables as boolean[]
+                      )
                     ).map(([rawMaterial, count], rawMaterialIndex) => {
                       if (count > 0) {
                         return (
@@ -920,7 +937,7 @@ function App() {
                           showComposites[backNumber] ? 'secondary' : 'primary'
                         }
                         onClick={() => {
-                          let newShowComposites = [...showComposites]
+                          const newShowComposites = [...showComposites]
                           newShowComposites[backNumber] =
                             !showComposites[backNumber]
                           setShowComposites(newShowComposites)
@@ -933,7 +950,7 @@ function App() {
                       Object.entries(
                         getCompositeMaterials(
                           back.craftables,
-                          back.disabledCraftables!
+                          back.disabledCraftables as boolean[]
                         )
                       ).map(([compositeType, composites], i) => {
                         if (Object.keys(composites).length !== 0)

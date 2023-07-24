@@ -28,7 +28,7 @@ export const getRawMaterials = (
     useritems: string[],
     disabledItems: boolean[]
 ): { [key: string]: number } => {
-    let rawMaterials: {
+    const rawMaterials: {
         Log: number
         Leaf: number
         Stone: number
@@ -108,11 +108,11 @@ export const getRawMaterials = (
                 // check materials
                 Object.keys(items[userItem]).forEach((material) => {
                     if (items[material]) {
-                        let compositeMaterials: string[] = []
+                        const compositeMaterials: string[] = []
                         for (let i = 0; i < items[userItem][material]; i++) {
                             compositeMaterials.push(material)
                         }
-                        let rawMaterialsFromComposite = getRawMaterials(
+                        const rawMaterialsFromComposite = getRawMaterials(
                             compositeMaterials,
                             new Array(compositeMaterials.length).fill(false)
                         )
@@ -147,8 +147,8 @@ export const getCompositeMaterials = (
     useritems: string[],
     disabledItems: boolean[]
 ): { [key: string]: { [key: string]: number } } => {
-    let composites: { [key: string]: number } = { ...compositesOrdering }
-    let subComposites: { [key: string]: number } = { ...compositesOrdering }
+    const composites: { [key: string]: number } = { ...compositesOrdering }
+    const subComposites: { [key: string]: number } = { ...compositesOrdering }
 
     useritems.forEach((userItem, i) => {
         if (!(disabledItems && i < disabledItems.length && disabledItems[i]))
