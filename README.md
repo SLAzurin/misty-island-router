@@ -13,7 +13,7 @@ Deploying to pages:
 ```
 yarn build
 git checkout pages
-rm -r static asset-manifest.json index.html robots.txt
+rm -rf static asset-manifest.json index.html robots.txt images assets
 cp -r dist/* .
 git add .
 git commit -m "update new version $(date +"%Y-%m-%d %T %Z")"
