@@ -311,7 +311,7 @@ function App() {
       <h5>
         <span style={{ color: 'red' }}>NEW! </span>
         2023-07-25: I added MSEA item names! Change between GMS and MSEA names
-        below in the options
+        below in the options. Warning, I might be missing some items tho
       </h5>
       <h5 className={defaultSpacing}>
         2023-07-23: I revamped the website's colors!
