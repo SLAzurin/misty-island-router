@@ -5,14 +5,15 @@ import {
   sampleBuildAzuriSurvivalArchitectL3,
   sampleBuildMikeychainV2,
   sampleBuildCh1,
-  sampleBuildCh2
+  sampleBuildCh2,
+  sampleBuildCh3
 } from './data'
 import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const currentBuildsVersion = 1690148496 * 1000
+const currentBuildsVersion = 1690345136 * 1000
 const defaultSpacing = 'mt-3 mb-3'
 
 interface IBuild {
@@ -500,6 +501,21 @@ function App() {
                   }}
                 >
                   Import Azuri's Chapter 2 build
+                </Button>
+              )}
+            </div>
+            <br />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!lockedBuild && (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setBuildExportStr(JSON.stringify(sampleBuildCh3))
+                  }}
+                >
+                  <strong style={{ color: 'red' }}>(WARNING! UNTESTED!)</strong>
+                  Import Azuri's Chapter 3 / Challenge Mode build
+                  <strong style={{ color: 'red' }}>(WARNING! UNTESTED!)</strong>
                 </Button>
               )}
             </div>
