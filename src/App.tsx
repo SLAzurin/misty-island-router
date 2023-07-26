@@ -149,6 +149,10 @@ function App() {
   const [minimalistMode, setMinimalistMode] = useState(false)
 
   useEffect(() => {
+    localStorage.setItem('mistyislandregion', region)
+  }, [region])
+
+  useEffect(() => {
     localStorage.setItem('buildsVersion', buildsVersion.toString())
   }, [buildsVersion])
 
