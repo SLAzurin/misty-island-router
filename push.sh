@@ -1,5 +1,14 @@
 #!/bin/bash
-set -e
+# origin=origin ./push_test.sh
+# use this to push to prod
+set -ex
+if [[ $origin == '' ]]; then
+    origin='test'
+fi
+if [[ $origin != 'test' ]]; then
+    git push "$origin" pages:pages
+    exit 0
+fi
 git checkout master
 pnpm run build
 git checkout pages
@@ -8,6 +17,6 @@ cp -r dist/* .
 git add .
 git commit -m "update new version $(date +"%Y-%m-%d %T %Z")"
 # Deploy on test server first
-git push test pages
+git push "$origin" pages
 git checkout master
 # Run this next: `git push origin pages:pages`
