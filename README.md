@@ -4,14 +4,15 @@ This app calculates how many raw materials are needed for each craftable thingy.
 
 Getting started as a dev:
 ```
-yarn
-yarn start
-yarn build
+npm i -g pnpm
+pnpm i
+pnpm run dev
+pnpm run build
 ```
 
 Deploying to pages:
 ```
-yarn build
+pnpm run build
 git checkout pages
 rm -rf static asset-manifest.json index.html robots.txt images assets
 cp -r dist/* .
