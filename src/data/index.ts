@@ -1,4 +1,4 @@
-export { items } from './items'
+export { items, mseaItems } from './items'
 
 export const sampleBuildCh1: {
     craftables: string[];

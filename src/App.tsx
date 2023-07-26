@@ -1,6 +1,7 @@
 import { CSSProperties, useEffect, useState } from 'react'
 import {
   items,
+  mseaItems,
   sampleBuildAzuriSurvivalArchitectL3,
   sampleBuildMikeychainV2,
   sampleBuildCh1,
@@ -29,6 +30,20 @@ const assetStyle = (unit: number): CSSProperties => {
 const centerStyle: CSSProperties = {
   height: 'fit-content',
   alignSelf: 'center'
+}
+
+const REGION: { [key: string]: string } = {
+  GMS: 'GMS',
+  MSEA: 'MSEA'
+}
+
+const getLocalizedItemName = (itemName: string, region: string) => {
+  switch (region) {
+    case REGION.MSEA:
+      return mseaItems[itemName] ?? itemName
+    default:
+      return itemName
+  }
 }
 
 const getTotalMaterials = (build: IBuild[]): { [key: string]: number } => {
@@ -105,6 +120,9 @@ const formatIBuild = (build: IBuild[] | string[][]): IBuild[] => {
 }
 
 function App() {
+  const [region, setRegion] = useState<string>(
+    REGION[localStorage.getItem('mistyislandregion') ?? 'MSEA']
+  )
   const [build, setBuild] = useState<IBuild[]>(
     localStorage.getItem('mistyislandbuild')
       ? formatIBuild(
@@ -285,12 +303,16 @@ function App() {
   return (
     <div style={{ marginBottom: '20vh' }}>
       <h1 className={defaultSpacing}>Misty Island Router</h1>
-      <h5 className={defaultSpacing}>
-        <span style={{ color: 'red' }}>NEW! </span>I revamped the website's
-        colors!
+      <h5>
+        <span style={{ color: 'red' }}>NEW! </span>
+        2023-07-25: I added MSEA item names! Change between GMS and MSEA names
+        below in the options
       </h5>
       <h5 className={defaultSpacing}>
-        I uploaded a video to follow along
+        2023-07-23: I revamped the website's colors!
+      </h5>
+      <h5 className={defaultSpacing}>
+        2023-07-20: I uploaded a video to follow along
         <br />
         Links:{' '}
         <a
@@ -309,10 +331,10 @@ function App() {
           Chapter 2
         </a>
         .<br />
-        Check them out if you having difficulty using the build template below!
+        Check them out if you having difficulty using the build templates below!
       </h5>
       <h5 className={defaultSpacing}>
-        I added Chapter 1 and 2 sample builds.
+        2023-07-19: I added Chapter 1 and 2 sample builds.
         <br />
         Import them below the visual options!
       </h5>
@@ -358,6 +380,26 @@ function App() {
                   Tip: If you're on mobile, use `Lock build`, `Minimalist mode`
                   and make your icons larger!
                 </Alert>
+                <h2>Item naming:</h2>
+                {Object.keys(REGION).map((regionCode) => (
+                  <label
+                    key={'change-region-' + regionCode}
+                    htmlFor={'change-region-' + regionCode}
+                    className="m-3"
+                  >
+                    <input
+                      id={'change-region-' + regionCode}
+                      type="radio"
+                      value={regionCode}
+                      name="change-region"
+                      checked={regionCode === region}
+                      onChange={(e) => {
+                        setRegion(e.target.value)
+                      }}
+                    />
+                    {regionCode}
+                  </label>
+                ))}
                 <h2>
                   Lock build:{' '}
                   <Button
@@ -667,7 +709,7 @@ function App() {
                                       key={`${backNumber}_${structureIndex}_${itemIndex}`}
                                       value={itemName}
                                     >
-                                      {itemName}
+                                      {getLocalizedItemName(itemName, region)}
                                     </option>
                                   )
                                 })}
@@ -774,7 +816,7 @@ function App() {
                                     key={`addcraftable${backNumber}_${itemIndex}`}
                                     value={itemName}
                                   >
-                                    {itemName}
+                                    {getLocalizedItemName(itemName, region)}
                                   </option>
                                 )
                               })}
@@ -795,7 +837,7 @@ function App() {
                               {searchTerms[backNumber].length !== 0 &&
                                 Object.keys(items).map((itemName) => {
                                   if (
-                                    itemName
+                                    getLocalizedItemName(itemName, region)
                                       .toLowerCase()
                                       .includes(
                                         searchTerms[backNumber].toLowerCase()
@@ -808,7 +850,7 @@ function App() {
                                           addCraftable(backNumber, itemName)
                                         }}
                                       >
-                                        {itemName}
+                                        {getLocalizedItemName(itemName, region)}
                                       </Button>
                                     )
                                   }
