@@ -581,6 +581,10 @@ function App() {
                           alt={rawMaterial}
                           src={getAsset(rawMaterial)}
                           style={assetStyle(assetSize)}
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null
+                            currentTarget.src = 'images/notfound.png'
+                          }}
                         ></img>
                         <p
                           style={{
@@ -694,6 +698,10 @@ function App() {
                             alt={structure}
                             style={assetStyle(assetSize)}
                             src={getAsset(structure)}
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null
+                              currentTarget.src = 'images/notfound.png'
+                            }}
                           />
                           {!lockedBuild ? (
                             <select
@@ -962,6 +970,10 @@ function App() {
                               alt={rawMaterial}
                               style={assetStyle(assetSize)}
                               src={getAsset(rawMaterial)}
+                              onError={({ currentTarget }) => {
+                                currentTarget.onerror = null
+                                currentTarget.src = 'images/notfound.png'
+                              }}
                             ></img>
                             {!minimalistMode ? (
                               <span
@@ -1035,6 +1047,11 @@ function App() {
                                         alt={rawMaterial}
                                         style={assetStyle(assetSize)}
                                         src={getAsset(rawMaterial)}
+                                        onError={({ currentTarget }) => {
+                                          currentTarget.onerror = null
+                                          currentTarget.src =
+                                            'images/notfound.png'
+                                        }}
                                       />
                                       {!minimalistMode ? (
                                         <span
