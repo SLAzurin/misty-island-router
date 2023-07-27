@@ -863,7 +863,7 @@ function App() {
                             ></input>
                             <div>
                               {searchTerms[backNumber].length !== 0 &&
-                                Object.keys(items).map((itemName) => {
+                                Object.keys(items).map((itemName, i) => {
                                   if (
                                     getLocalizedItemName(itemName, region)
                                       .toLowerCase()
@@ -873,6 +873,7 @@ function App() {
                                   ) {
                                     return (
                                       <Button
+                                        key={`addCraftable-${backNumber}-${i}`}
                                         variant="link"
                                         onClick={() => {
                                           addCraftable(backNumber, itemName)
