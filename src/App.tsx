@@ -6,14 +6,14 @@ import {
   sampleBuildMikeychainV2,
   sampleBuildCh1,
   sampleBuildCh2,
-  sampleBuildCh3
+  sampleBuildLazyV2AzuriEdition
 } from './data'
 import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const currentBuildsVersion = 1690345136 * 1000
+const currentBuildsVersion = 1690597070 * 1000
 const defaultSpacing = 'mt-3 mb-3'
 
 interface IBuild {
@@ -510,12 +510,11 @@ function App() {
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    setBuildExportStr(JSON.stringify(sampleBuildCh3))
+                    setBuildExportStr(JSON.stringify(sampleBuildLazyV2AzuriEdition))
                   }}
                 >
-                  <strong style={{ color: 'red' }}>(WARNING! UNTESTED!)</strong>
-                  Import Azuri's Chapter 3 / Challenge Mode build
-                  <strong style={{ color: 'red' }}>(WARNING! UNTESTED!)</strong>
+                  Import Mikeychain's Lazy 2.0 Route for Chapter 3 / Challenge
+                  Mode (Azuri edition)
                 </Button>
               )}
             </div>
