@@ -1,7 +1,7 @@
 #!/bin/bash
-# origin=origin ./push_test.sh
+# origin=origin ./push.sh
 # use this to push to prod
-set -ex
+set -e
 if [[ $origin == '' ]]; then
     origin='test'
 fi
