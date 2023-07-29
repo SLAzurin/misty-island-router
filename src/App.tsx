@@ -753,7 +753,7 @@ function App() {
                                 width: '100px'
                               }}
                             >
-                              {structure}
+                              {getLocalizedItemName(structure, region)}
                             </div>
                           ) : (
                             <s
@@ -763,7 +763,7 @@ function App() {
                                 color: 'red'
                               }}
                             >
-                              {structure}
+                              {getLocalizedItemName(structure, region)}
                             </s>
                           )}
                           {typeof back.disabledCraftables !== 'undefined' &&
