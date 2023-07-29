@@ -59,7 +59,14 @@ export const mseaItems: { [key: string]: string } = {
   'Attack Power Increase Potion': 'ATT Potion',
   'Defense Increase Potion': 'DEF Potion',
   'Speed Increase Potion': 'MSPD Potion',
-  'Jump Increase Potion': 'Jump Potion'
+  'Jump Increase Potion': 'Jump Potion',
+  Firebomb: 'Flame Bottle',
+  'Refined Lava Stone Crystal': 'Refined Lavastone Crystal',
+  'Armor of Protection': "Guardian's Armor",
+  'Helmet of Protection': "Guardian's Helm",
+  'Shoes of Protection': "Guardian's Shoes",
+  'Flag of Protection': "Guardian's Banner",
+  'Heavy Sword of Protection': "Guardian's Greatsword"
 }
 
 // GMS names
