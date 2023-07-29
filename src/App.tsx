@@ -914,7 +914,8 @@ function App() {
                           <textarea
                             rows={4}
                             style={{
-                              width: '100%'
+                              width: '100%',
+                              resize: 'both',
                             }}
                             onChange={(e) => {
                               if (!lockedBuild) {
