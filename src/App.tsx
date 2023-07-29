@@ -310,8 +310,8 @@ function App() {
       <h1 className={defaultSpacing}>Misty Island Router</h1>
       <h5>
         <span style={{ color: 'red' }}>NEW! </span>
-        2023-07-25: I added MSEA item names! Change between GMS and MSEA names
-        below in the options. Warning, I might be missing some items tho
+        2023-07-25: I added MSEA craftable item names! Change between GMS and MSEA names
+        below in the options. Warning, I am missing a lot of food translations.
       </h5>
       <h5 className={defaultSpacing}>
         2023-07-23: I revamped the website's colors!
@@ -510,7 +510,9 @@ function App() {
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    setBuildExportStr(JSON.stringify(sampleBuildLazyV2AzuriEdition))
+                    setBuildExportStr(
+                      JSON.stringify(sampleBuildLazyV2AzuriEdition)
+                    )
                   }}
                 >
                   Import Mikeychain's Lazy 2.0 Route for Chapter 3 / Challenge
