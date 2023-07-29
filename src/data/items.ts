@@ -66,7 +66,8 @@ export const mseaItems: { [key: string]: string } = {
   'Helmet of Protection': "Guardian's Helm",
   'Shoes of Protection': "Guardian's Shoes",
   'Flag of Protection': "Guardian's Banner",
-  'Heavy Sword of Protection': "Guardian's Greatsword"
+  'Heavy Sword of Protection': "Guardian's Greatsword",
+  'Holy Grail': 'Chalice'
 }
 
 // GMS names
