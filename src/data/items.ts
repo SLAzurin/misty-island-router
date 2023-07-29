@@ -25,7 +25,7 @@ export const mseaItems: { [key: string]: string } = {
   'Golden Helmet': 'Golden Helm',
   'Steel Helmet': 'Steel Helm',
   'Chief of Lizardmen Hat': 'Lizardmen Chief Hat',
-  'Iron Plated Shoes': 'Metal Plated Shoes',
+  'Iron Plated Shoes': 'Metal-Plated Shoes',
   'Feather Boots': "'Feather Shoes",
   'Survival Worktable': 'Survival Workbench',
   'Industrial Worktable': 'Industrial Workbench',
@@ -67,7 +67,13 @@ export const mseaItems: { [key: string]: string } = {
   'Shoes of Protection': "Guardian's Shoes",
   'Flag of Protection': "Guardian's Banner",
   'Heavy Sword of Protection': "Guardian's Greatsword",
-  'Holy Grail': 'Chalice'
+  'Holy Grail': 'Chalice',
+  'Magic Bag': 'Magic Backpack',
+  'Water Cane': 'Water Wand',
+  'Lightning Cane': 'Lightning Wand',
+  'Magic Robe': 'Enchanted Robe',
+  'Sole Shoes': 'Pad Shoes',
+  'Stance Shoes[TR: Knockback Resistance Shoes]': 'Stance Shoes'
 }
 
 // GMS names
