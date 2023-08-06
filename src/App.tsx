@@ -6,14 +6,15 @@ import {
   sampleBuildMikeychainV2,
   sampleBuildCh1,
   sampleBuildCh2,
-  sampleBuildLazyV2AzuriEdition
+  sampleBuildLazyV2AzuriEdition,
+  sampleBuildAzuriChallengeModeStephTheKaoInspired
 } from './data'
 import { getCompositeMaterials, getRawMaterials } from './helpers/ItemsHelper'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const currentBuildsVersion = 1690597070 * 1000
+const currentBuildsVersion = 1691359807 * 1000
 const defaultSpacing = 'mt-3 mb-3'
 
 interface IBuild {
@@ -489,26 +490,19 @@ function App() {
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    setBuildExportStr(JSON.stringify(sampleBuildCh1))
+                    setBuildExportStr(
+                      JSON.stringify(
+                        sampleBuildAzuriChallengeModeStephTheKaoInspired
+                      )
+                    )
                   }}
                 >
-                  Import Azuri's Chapter 1 build
+                  Import Azuri's Challenge Mode build: AFK edition (High upgrade
+                  points required, inspired from StephTheKao's strategy)
                 </Button>
               )}
             </div>
-            <br />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {!lockedBuild && (
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setBuildExportStr(JSON.stringify(sampleBuildCh2))
-                  }}
-                >
-                  Import Azuri's Chapter 2 build
-                </Button>
-              )}
-            </div>
+
             <br />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {!lockedBuild && (
@@ -552,6 +546,32 @@ function App() {
                 >
                   Import Azuri's high upgrade points, EZCLAP and semi-overkill
                   route (survival architect L3 required)
+                </Button>
+              )}
+            </div>
+            <br />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!lockedBuild && (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setBuildExportStr(JSON.stringify(sampleBuildCh2))
+                  }}
+                >
+                  Import Azuri's Chapter 2 build
+                </Button>
+              )}
+            </div>
+            <br />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {!lockedBuild && (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setBuildExportStr(JSON.stringify(sampleBuildCh1))
+                  }}
+                >
+                  Import Azuri's Chapter 1 build
                 </Button>
               )}
             </div>
