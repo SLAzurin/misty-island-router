@@ -26,7 +26,7 @@ export const mseaItems: { [key: string]: string } = {
   'Steel Helmet': 'Steel Helm',
   'Chief of Lizardmen Hat': 'Lizardmen Chief Hat',
   'Iron Plated Shoes': 'Metal-Plated Shoes',
-  'Feather Boots': "'Feather Shoes",
+  'Feather Boots': 'Feather Shoes',
   'Survival Worktable': 'Survival Workbench',
   'Industrial Worktable': 'Industrial Workbench',
   'Engineering Worktable': 'Engineering Workbench',
