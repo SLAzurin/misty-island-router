@@ -478,9 +478,9 @@ function App() {
                 dismissible
               >
                 <Alert.Heading>
-                  Builds were updated on{' '}
-                  {new Date(currentBuildsVersion).toLocaleString()} (your
-                  timezone)
+                  <strong style={{ color: 'red' }}>NEW!</strong> Builds were
+                  updated on {new Date(currentBuildsVersion).toLocaleString()}{' '}
+                  (your timezone)
                 </Alert.Heading>
                 Please re-import if you were using one of the following builds.
               </Alert>
