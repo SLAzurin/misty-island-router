@@ -234,6 +234,9 @@ function App() {
   }
 
   useEffect(() => {
+    if (buildExportStr == '') {
+      return
+    }
     let newBuild: IBuild[]
     try {
       newBuild = formatIBuild(JSON.parse(buildExportStr))
@@ -268,6 +271,7 @@ function App() {
     setBuildExportStrError('')
     setBuild(newBuild)
     setShowImportRouteTextarea(false)
+    setBuildExportStr('')
   }, [buildExportStr])
 
   useEffect(() => {
@@ -915,7 +919,7 @@ function App() {
                             rows={4}
                             style={{
                               width: '100%',
-                              resize: 'both',
+                              resize: 'both'
                             }}
                             onChange={(e) => {
                               if (!lockedBuild) {
